@@ -8,6 +8,7 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
@@ -20,13 +21,13 @@ jobs:
       - name: Install dependencies
         run: npm install
 
-      # Ajoutez les étapes spécifiques à votre configuration de déploiement ici
-      # Par exemple, copiez les fichiers build vers le serveur ou exécutez une commande de déploiement personnalisée
+      # Build your application
+      - name: Build application
+        run: npm run build
 
-      # Exemple d'étape pour déployer vers GitHub Pages (à adapter pour une autre plateforme)
-      - name: Deploy to GitHub Pages
+      # Example deployment using SSH
+      - name: Deploy to Custom Server
         run: |
-          npm run build  # Construire votre application
-          npx gh-pages -d build  # Déployer les fichiers build vers GitHub Pages
-
+          ssh user@server 'bash -s' < deploy.sh
+    
 
