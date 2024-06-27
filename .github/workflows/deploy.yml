@@ -1,33 +1,32 @@
-name: Deploy to GitHub Pages
+name: Deploy to Custom Server
 
 on:
   push:
     branches:
-      - main  # Déclenche le déploiement lors d'un push sur la branche principale
+      - main
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
-
     steps:
-    - name: Checkout repository
-      uses: actions/checkout@v2
+      - name: Checkout repository
+        uses: actions/checkout@v2
 
-    - name: Set up Node.js
-      uses: actions/setup-node@v2
-      with:
-        node-version: '14'  # Version de Node.js à utiliser
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '14'
 
-    - name: Install dependencies
-      run: npm install  # Installe les dépendances du projet
+      - name: Install dependencies
+        run: npm install
 
-    - name: Build project
-      run: npm run build  # Commande pour construire votre projet
+      # Ajoutez les étapes spécifiques à votre configuration de déploiement ici
+      # Par exemple, copiez les fichiers build vers le serveur ou exécutez une commande de déploiement personnalisée
 
-    - name: Deploy to GitHub Pages
-      run: npx gh-pages -d build  # Commande pour déployer votre projet
-
-    - name: Clean up
-      run: npm run clean  # Commande pour nettoyer les fichiers temporaires si nécessaire
+      # Exemple d'étape pour déployer vers GitHub Pages (à adapter pour une autre plateforme)
+      - name: Deploy to GitHub Pages
+        run: |
+          npm run build  # Construire votre application
+          npx gh-pages -d build  # Déployer les fichiers build vers GitHub Pages
 
 
