@@ -1,0 +1,13 @@
+{
+    "database": {
+      "host": "localhost",
+      "port": 27017,
+      "username": "admin",
+      "password": "password123"
+    },
+    "app": {
+      "name": "My App",
+      "version": "1.0.0"
+    }
+  }
+  
