@@ -11,11 +11,16 @@ const connectDB = async () => {
         console.log('MongoDB connected');
     } catch (err) {
         console.error('MongoDB connection error:', err.message);
-        process.exit(1); // Arrêt de l'application en cas d'erreur de connexion
+        process.exit(1); 
     }
 };
 
 module.exports = connectDB;
+
+
+
+
+
 
 
 

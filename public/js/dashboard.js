@@ -1,4 +1,3 @@
-// Ensure the user is authenticated
 if (!localStorage.getItem('token')) {
     window.location.href = 'index.html';
 }
@@ -17,7 +16,7 @@ async function fetchCatways() {
         });
         const catways = await response.json();
         const catwayList = document.getElementById('catwayList');
-        catwayList.innerHTML = ''; // Clear the list before adding new items
+        catwayList.innerHTML = ''; 
         catways.forEach(catway => {
             const listItem = document.createElement('li');
             listItem.textContent = `Catway ${catway.catwayNumber} - ${catway.type}`;
@@ -42,7 +41,7 @@ async function fetchReservations() {
         });
         const reservations = await response.json();
         const reservationList = document.getElementById('reservationList');
-        reservationList.innerHTML = ''; // Clear the list before adding new items
+        reservationList.innerHTML = ''; 
         reservations.forEach(reservation => {
             const listItem = document.createElement('li');
             listItem.textContent = `Reservation for Catway ${reservation.catwayNumber} - ${reservation.clientName}`;

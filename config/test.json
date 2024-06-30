@@ -1,6 +1,21 @@
 {
-    "mongoURI": "mongodb://localhost:27017/my-test-database",
-    "jwtSecret": "myTestJwtSecret"
+    "mongoURI": "mongodb://localhost:27017/mytestdb",
+    "database": {
+      "host": "localhost",
+      "port": 27017,
+      "username": "admin",
+      "password": "password123"
+    },
+    "app": {
+      "name": "My App",
+      "version": "1.0.0"
+    }
   }
+  
+  
+  
+  
+  
+  
   
   

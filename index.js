@@ -1,4 +1,5 @@
 const { spawn } = require('child_process');
+const connectDB = require('./config/db');
 
 const ls = spawn('ls');
 

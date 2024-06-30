@@ -35,27 +35,26 @@ swaggerSetup(app);
 // MongoDB Connection
 async function startServer() {
     try {
-      let dbConfig;
-      if (process.env.NODE_ENV === 'test') {
-        dbConfig = config.util.loadFileConfigs('./config/test.json');
-        console.log('Using test configuration:', dbConfig);
-        await connectDB(dbConfig.mongoURI); // Utilisation de la mongoURI de la config de test
-      } else {
-        // Utilisation de la configuration par défaut ou de l'environnement spécifié
-        await connectDB(config.get('mongoURI')); // Utilisation de la mongoURI par défaut
-      }
-      console.log('MongoDB connected');
+        let mongoURI;
+        if (process.env.NODE_ENV === 'test') {
+            mongoURI = config.get('mongoURI'); 
+        } else {
+            mongoURI = config.get('mongoURI'); 
+        }
+        await connectDB(mongoURI); 
+        console.log('MongoDB connected');
     } catch (err) {
-      console.error('MongoDB connection error:', err.message);
-      process.exit(1); // Arrêt de l'application en cas d'erreur de connexion
+        console.error('MongoDB connection error:', err.message);
+        process.exit(1);
     }
-  
-    // Démarrer le serveur après la connexion réussie à MongoDB
+
     app.listen(port, () => {
-      console.log(`Server running on port ${port}`);
+        console.log(`Server running on port ${port}`);
     });
-  }
-  
-  startServer();
+}
+
+startServer();
+
+
 
 

@@ -1,5 +1,3 @@
-// reservations.js
-
 // Attendre que le DOM soit chargé avant d'exécuter le code
 document.addEventListener('DOMContentLoaded', async () => {
     try {
@@ -25,7 +23,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         console.log('Reservations fetched:', reservations);
         
         const reservationList = document.getElementById('reservationList');
-        reservationList.innerHTML = ''; // Effacer les éléments précédents de la liste
+        reservationList.innerHTML = ''; 
 
         if (reservations.length === 0) {
             reservationList.textContent = 'No reservations available';

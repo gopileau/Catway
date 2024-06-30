@@ -1,4 +1,3 @@
-// Assurez-vous que ce code est exécuté après le chargement du DOM
 document.addEventListener('DOMContentLoaded', () => {
     // Fonction pour supprimer un utilisateur
     const deleteUser = async (userId) => {
@@ -33,7 +32,7 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('deleteUserForm').addEventListener('submit', async (event) => {
         event.preventDefault();
         const userId = document.getElementById('deleteUserId').value;
-        await deleteUser(userId); // Appel de la fonction deleteUser
+        await deleteUser(userId); 
     });
 
     // Fetch catways and reservations
@@ -50,7 +49,7 @@ document.addEventListener('DOMContentLoaded', () => {
             });
             const catways = await response.json();
             const catwayList = document.getElementById('catwayList');
-            catwayList.innerHTML = ''; // Clear the list before adding new items
+            catwayList.innerHTML = '';
             catways.forEach(catway => {
                 const listItem = document.createElement('li');
                 listItem.textContent = `Catway ${catway.catwayNumber} - ${catway.type}`;
@@ -75,7 +74,7 @@ document.addEventListener('DOMContentLoaded', () => {
             });
             const reservations = await response.json();
             const reservationList = document.getElementById('reservationList');
-            reservationList.innerHTML = ''; // Clear the list before adding new items
+            reservationList.innerHTML = ''; 
             reservations.forEach(reservation => {
                 const listItem = document.createElement('li');
                 listItem.textContent = `Reservation for Catway ${reservation.catwayNumber} - ${reservation.clientName}`;

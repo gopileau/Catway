@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
-const User = require('./models/User'); // Assurez-vous que le chemin vers le modèle est correct
+const User = require('./models/User'); 
 
 mongoose.connect('mongodb://127.0.0.1:27017/test', {
   useNewUrlParser: true,
@@ -14,7 +14,7 @@ const createUser = async () => {
   const user = new User({
     email: 'admin@example.com',
     password: hashedPassword
-    // Le champ `name` est retiré si non requis
+    
   });
 
   await user.save();

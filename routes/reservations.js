@@ -4,12 +4,14 @@ const {
     getReservations,
     getReservation,
     createReservation,
+    updateReservation,
     deleteReservation
 } = require('../controllers/reservationController');
 
-router.get('/', getReservations); // Récupère toutes les réservations
-router.get('/:id', getReservation); // Récupère les réservations pour un catway spécifique // Récupère une réservation spécifique
-router.post('/', createReservation); // Crée une nouvelle réservation pour un catway
-router.delete('/:id', deleteReservation); // Supprime une réservation spécifique
+router.get('/', getReservations);
+router.get('/:id', getReservation);
+router.post('/:catwayId/reservations', createReservation); // Utilisation du catwayId pour lier la réservation à un catway
+router.put('/:id', updateReservation);
+router.delete('/:id', deleteReservation);
 
 module.exports = router;

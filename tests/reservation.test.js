@@ -1,30 +1,25 @@
 const request = require('supertest');
 const mongoose = require('mongoose');
-const path = require('path'); // Utilisez path pour résoudre le chemin
+const path = require('path');
 const app = require(path.resolve(__dirname, '../server'));
-
-const Reservation = require('../models/Reservation');
-
-
-// Si vous avez un fichier de configuration pour les variables d'environnement
-require('dotenv').config();
+require('dotenv').config({ path: path.resolve(__dirname, '../.env') });
 
 describe('Reservation API', () => {
+    let token;
+    let server;
+
     beforeAll(async () => {
-        await mongoose.connect(process.env.MONGO_URI, { 
-            useNewUrlParser: true, 
-            useUnifiedTopology: true 
-        });
+        console.log('Connecting to MongoDB:', process.env.MONGO_URI);
+        await mongoose.connect(process.env.MONGO_URI);
+        server = await app.listen(5000); 
     });
 
     afterAll(async () => {
         await mongoose.connection.close();
+        server.close(); 
     });
 
-    let token;
-
     beforeEach(async () => {
-        // Connectez-vous et obtenez un token à utiliser pour les tests
         const res = await request(app)
             .post('/api/auth/login')
             .send({
@@ -50,6 +45,10 @@ describe('Reservation API', () => {
         expect(res.statusCode).toEqual(201);
         expect(res.body).toHaveProperty('_id');
     });
-
-    // Ajoutez des tests pour les autres routes
 });
+
+
+
+
+
+

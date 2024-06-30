@@ -2,7 +2,7 @@ const jwt = require('jsonwebtoken');
 const config = require('config');
 
 function auth(req, res, next) {
-  const token = req.header('Authorization'); // Notez le changement ici
+  const token = req.header('Authorization'); 
 
   if (!token) {
     return res.status(401).json({ message: 'No token, authorization denied' });
@@ -18,5 +18,6 @@ function auth(req, res, next) {
 }
 
 module.exports = auth;
+
 
 
