@@ -1,5 +1,4 @@
 const express = require('express');
-const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const morgan = require('morgan');
 const dotenv = require('dotenv');
@@ -32,28 +31,8 @@ app.use(express.static('public'));
 // Swagger documentation
 swaggerSetup(app);
 
-// MongoDB Connection
-async function startServer() {
-    try {
-        let mongoURI;
-        if (process.env.NODE_ENV === 'test') {
-            mongoURI = config.get('mongoURI'); 
-        } else {
-            mongoURI = config.get('mongoURI'); 
-        }
-        await connectDB(mongoURI); 
-        console.log('MongoDB connected');
-    } catch (err) {
-        console.error('MongoDB connection error:', err.message);
-        process.exit(1);
-    }
+module.exports = app;  // Exportez l'instance d'Express configurée
 
-    app.listen(port, () => {
-        console.log(`Server running on port ${port}`);
-    });
-}
-
-startServer();
 
 
 

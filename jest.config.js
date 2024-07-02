@@ -3,9 +3,14 @@ module.exports = {
   setupFilesAfterEnv: ['<rootDir>/jest.setup.js'],
   testPathIgnorePatterns: ['/node_modules/'],
   transform: {
-    '^.+\\.jsx?$': 'babel-jest'
-  }
+    '^.+\\.[tj]sx?$': 'babel-jest', // Inclure .ts et .tsx en plus de .js et .jsx
+  },
+  transformIgnorePatterns: [
+    '/node_modules/(?!bson)', // Ne pas ignorer la transformation pour bson
+  ],
 };
+
+
 
 
 
