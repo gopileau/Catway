@@ -16,18 +16,18 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v2
         with:
-          node-version: '14'
+          node-version: '16'  # Mettez à jour vers une version plus récente de Node.js
+
+      - name: Remove old node_modules and package-lock.json
+        run: |
+          rm -rf node_modules package-lock.json
 
       - name: Install dependencies
-        run: npm install
+        run: npm install --force  # Utilisez --force pour résoudre les problèmes de lien symbolique
 
-      # Build your application
       - name: Build application
         run: npm run build
 
-      # Example deployment using SSH
       - name: Deploy to Custom Server
         run: |
           ssh user@server 'bash -s' < deploy.sh
-    
-
