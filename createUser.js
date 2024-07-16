@@ -1,25 +1,35 @@
 const mongoose = require('mongoose');
-const bcrypt = require('bcryptjs');
-const User = require('./models/User'); 
+const User = require('./models/User'); // Assurez-vous que le chemin est correct
 
-mongoose.connect('mongodb://127.0.0.1:27017/test', {
+mongoose.connect('mongodb://127.0.0.1:27017/catway-reservation', {
   useNewUrlParser: true,
   useUnifiedTopology: true
 });
 
 const createUser = async () => {
-  const salt = await bcrypt.genSalt(10);
-  const hashedPassword = await bcrypt.hash('password', salt);
+  try {
+    const existingUser = await User.findOne({ email: 'admin@example.com' });
 
-  const user = new User({
-    email: 'admin@example.com',
-    password: hashedPassword
-    
-  });
+    if (existingUser) {
+      console.log('User with email admin@example.com already exists');
+      return;
+    }
 
-  await user.save();
-  console.log('User created');
-  mongoose.connection.close();
+    const newUser = new User({
+      name: 'admin',
+      email: 'admin@example.com',
+      password: 'password'
+    });
+
+    await newUser.save();
+    console.log('User created successfully');
+  } catch (err) {
+    console.error('Error creating user:', err);
+  } finally {
+    mongoose.connection.close();
+  }
 };
 
 createUser();
+
+

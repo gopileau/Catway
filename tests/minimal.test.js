@@ -1,6 +1,10 @@
-// tests/minimal.test.js
-require('@testing-library/jest-dom/extend-expect');
+// Import Chai
+const chai = require('chai');
+const expect = chai.expect;
 
-test('dummy test', () => {
-  expect(true).toBe(true);
+// Sample test
+describe('Sample Test', () => {
+  it('should pass', () => {
+    expect(true).to.be.true;
+  });
 });

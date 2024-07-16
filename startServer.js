@@ -1,10 +1,13 @@
 const path = require('path');
+const express = require('express');
 const app = require(path.resolve(__dirname, './server'));  // Utilisation du chemin absolu
-
 const config = require('config');
 const connectDB = require('./config/db');
 
 const port = process.env.PORT || 5000;
+
+// Middleware pour parser le corps des requêtes POST en JSON
+app.use(express.json());
 
 async function startServer() {
     try {

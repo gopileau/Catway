@@ -20,24 +20,19 @@ const ReservationSchema = new mongoose.Schema({
         required: true
     },
     checkIn: {
-        type: Date,
-        required: true
+        type: Date
     },
     checkOut: {
-        type: Date,
-        required: true
+        type: Date
     },
     boatName: {
-        type: String,
-        required: true
+        type: String
     },
     clientName: {
-        type: String,
-        required: true
+        type: String
     },
     catwayNumber: {
-        type: Number,
-        required: true
+        type: Number
     }
 });
 

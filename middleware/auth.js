@@ -1,15 +1,16 @@
+// middleware/auth.js
 const jwt = require('jsonwebtoken');
 const config = require('config');
 
 function auth(req, res, next) {
-  const token = req.header('Authorization'); 
+  const token = req.header('Authorization');
 
   if (!token) {
     return res.status(401).json({ message: 'No token, authorization denied' });
   }
 
   try {
-    const decoded = jwt.verify(token.split(' ')[1], config.get('jwtSecret')); // Extraire le token après 'Bearer'
+    const decoded = jwt.verify(token.split(' ')[1], config.get('jwtSecret'));
     req.user = decoded.user;
     next();
   } catch (err) {
@@ -18,6 +19,7 @@ function auth(req, res, next) {
 }
 
 module.exports = auth;
+
 
 
 

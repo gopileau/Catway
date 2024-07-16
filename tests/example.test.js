@@ -1,5 +1,8 @@
+const chai = require('chai');
+const expect = chai.expect;
+
 describe('Example Test', () => {
     it('should pass', () => {
-        expect(1 + 1).toBe(2);
+        expect(true).to.be.true;
     });
 });

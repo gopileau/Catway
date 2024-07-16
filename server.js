@@ -7,7 +7,7 @@ const authRoutes = require('./routes/auth');
 const userRoutes = require('./routes/users');
 const catwayRoutes = require('./routes/catways');
 const reservationRoutes = require('./routes/reservations');
-const connectDB = require('./config/db'); 
+const connectDB = require('./config/db');
 const swaggerSetup = require('./swagger');
 
 dotenv.config();

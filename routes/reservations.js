@@ -3,7 +3,7 @@ const router = express.Router();
 const Reservation = require('../models/Reservation'); // Assurez-vous que le modèle Reservation existe
 const { check, validationResult } = require('express-validator');
 
-// Exemple de route de création de réservation
+// Route pour créer une réservation
 router.post(
   '/',
   [
@@ -36,5 +36,16 @@ router.post(
     }
   }
 );
+
+// Route pour obtenir toutes les réservations
+router.get('/', async (req, res) => {
+  try {
+    const reservations = await Reservation.find();
+    res.json(reservations);
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send('Server error');
+  }
+});
 
 module.exports = router;

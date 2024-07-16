@@ -2,8 +2,8 @@
     "database": {
       "host": "localhost",
       "port": 27017,
-      "username": "admin",
-      "password": "password123"
+      "username": "laura",
+      "password": "password"
     },
     "app": {
       "name": "My App",

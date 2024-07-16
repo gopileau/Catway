@@ -1,19 +1,18 @@
 const { spawn } = require('child_process');
-const connectDB = require('./config/db');
 
-const ls = spawn('ls');
+// Exemple : exécuter la commande PowerShell Get-ChildItem
+const ps = spawn('powershell.exe', ['-Command', 'Get-ChildItem']);
 
-ls.stdout.on('data', (data) => {
+ps.stdout.on('data', (data) => {
     console.log(`stdout:\n${data}`);
 });
 
-ls.stderr.on('data', (data) => {
-    console.log(`stderr:\n${data}`);
+ps.stderr.on('data', (data) => {
+    console.error(`stderr:\n${data}`);
 });
 
-ls.on('close', (code) => {
+ps.on('close', (code) => {
     console.log(`child process exited with code ${code}`);
 });
-
 
 
