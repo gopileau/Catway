@@ -31,8 +31,7 @@ app.use(express.static('public'));
 // Swagger documentation
 swaggerSetup(app);
 
-module.exports = app;  // Exportez l'instance d'Express configurée
-
+module.exports = app;  
 
 
 

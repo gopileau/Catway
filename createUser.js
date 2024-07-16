@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const User = require('./models/User'); // Assurez-vous que le chemin est correct
+const User = require('./models/User'); 
 
 mongoose.connect('mongodb://127.0.0.1:27017/catway-reservation', {
   useNewUrlParser: true,

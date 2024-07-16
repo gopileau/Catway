@@ -16,7 +16,7 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v2
         with:
-          node-version: '14'
+          node-version: '16'
 
       - name: Install dependencies
         run: npm install
@@ -28,8 +28,8 @@ jobs:
         uses: akhileshns/heroku-deploy@v3.12.12
         with:
           heroku_api_key: ${{ secrets.HEROKU_API_KEY }}
-          heroku_app_name: 'catway'  # Remplacez par le nom de votre application Heroku
-          heroku_email: 'YOUR_HEROKU_EMAIL'  # Remplacez par votre email Heroku
+          heroku_app_name: 'catway'  
+          heroku_email: 'vanessagonzalez99@hotmail.com' 
 
       - name: Restart Heroku app (if necessary)
-        run: heroku restart -a 'catway'  # Remplacez par le nom de votre application Heroku
+        run: heroku restart -a 'catway'  

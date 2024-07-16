@@ -1,6 +1,6 @@
 const path = require('path');
 const express = require('express');
-const app = require(path.resolve(__dirname, './server'));  // Utilisation du chemin absolu
+const app = require(path.resolve(__dirname, './server'));  
 const config = require('config');
 const connectDB = require('./config/db');
 
@@ -11,7 +11,7 @@ app.use(express.json());
 
 async function startServer() {
     try {
-        let mongoURI = config.get('mongoURI');  // Utilisez la même méthode de configuration que dans vos tests
+        let mongoURI = config.get('mongoURI');  
         await connectDB(mongoURI); 
         console.log('MongoDB connected');
     } catch (err) {

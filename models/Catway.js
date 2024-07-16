@@ -13,7 +13,7 @@ const CatwaySchema = new Schema({
     type: {
         type: String,
         required: true,
-        enum: ['type1', 'type2', 'type3'] // Remplacez ces valeurs par celles définies dans votre schéma
+        enum: ['type1', 'type2', 'type3']
     },
     catwayNumber: {
         type: Number,

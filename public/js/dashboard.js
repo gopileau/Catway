@@ -2,11 +2,9 @@ if (!localStorage.getItem('token')) {
     window.location.href = 'index.html';
 }
 
-// Fetch catways and reservations
 fetchCatways();
 fetchReservations();
 
-// Function to fetch and populate the catways
 async function fetchCatways() {
     try {
         const response = await fetch('/api/catways', {
@@ -31,7 +29,6 @@ async function fetchCatways() {
     }
 }
 
-// Function to fetch and populate the reservations
 async function fetchReservations() {
     try {
         const response = await fetch('/api/reservations', {
@@ -56,7 +53,6 @@ async function fetchReservations() {
     }
 }
 
-// Form handlers to create, update, and delete catways and reservations
 
 // Create Catway
 document.getElementById('createCatwayForm').addEventListener('submit', async (event) => {

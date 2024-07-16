@@ -3,20 +3,20 @@ const request = require('supertest');
 const mongoose = require('mongoose');
 const app = require(path.resolve(__dirname, '../server'));
 const User = require('../models/User');
-const Catway = require('../models/Catway'); // Assurez-vous d'importer votre modèle Catway
+const Catway = require('../models/Catway');
 const fs = require('fs');
 const chai = require('chai');
 const expect = chai.expect;
 
-// Chargez le fichier de configuration JSON depuis config/test.json
-const configPath = path.resolve(__dirname, '../config/test.json'); // Utilisez le chemin correct vers test.json
+
+const configPath = path.resolve(__dirname, '../config/test.json');
 const configFile = fs.readFileSync(configPath, 'utf8');
 const config = JSON.parse(configFile);
 
 let server;
 
 before(async function() {
-    this.timeout(20000); // 20 seconds timeout for the before hook
+    this.timeout(20000); 
     try {
         console.log("Starting server...");
         server = app.listen(5000);
@@ -25,11 +25,12 @@ before(async function() {
         console.log("Connected to MongoDB");
     } catch (err) {
         console.error("Error during setup:", err);
+        throw err; 
     }
 });
 
 after(async function() {
-    this.timeout(20000); // 20 seconds timeout for the after hook
+    this.timeout(20000); 
     try {
         console.log("Closing MongoDB connection...");
         await mongoose.connection.close();
@@ -39,13 +40,14 @@ after(async function() {
         console.log("Server stopped");
     } catch (err) {
         console.error("Error during teardown:", err);
+        throw err; 
     }
 });
 
 describe('Reservation API', () => {
     it('should create a new reservation', async () => {
         let existingUser = await User.findOne();
-        let existingCatway = await Catway.findOne(); // Cherchez un catway existant
+        let existingCatway = await Catway.findOne();
 
         if (!existingUser) {
             existingUser = new User({
@@ -69,20 +71,20 @@ describe('Reservation API', () => {
         const res = await request(app)
             .post('/api/reservations')
             .send({
-                user: existingUser._id.toString(), // Assurez-vous que l'ID de l'utilisateur est converti en chaîne
+                user: existingUser._id.toString(),
                 startTime: '2024-07-03T10:00:00Z',
                 endTime: '2024-07-03T12:00:00Z',
                 checkIn: '2024-07-03T10:00:00Z',
-                catway: existingCatway._id.toString(), // Utilisez un ObjectId valide pour le catway
+                catway: existingCatway._id.toString(),
             })
             .set('Accept', 'application/json');
 
-        console.log(res.body); // Ajoutez ceci pour voir le message d'erreur
+        console.log(res.body);
 
-        // Vérifiez la réponse
-        expect(res.status).to.be.equal(201); // Assurez-vous que le statut de la réponse est 201
+        expect(res.status).to.be.equal(201);
     });
 });
+
 
 
 

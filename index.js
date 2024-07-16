@@ -1,6 +1,6 @@
 const { spawn } = require('child_process');
 
-// Exemple : exécuter la commande PowerShell Get-ChildItem
+
 const ps = spawn('powershell.exe', ['-Command', 'Get-ChildItem']);
 
 ps.stdout.on('data', (data) => {

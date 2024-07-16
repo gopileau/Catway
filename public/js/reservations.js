@@ -1,4 +1,3 @@
-// Attendre que le DOM soit chargé avant d'exécuter le code
 document.addEventListener('DOMContentLoaded', async () => {
     try {
         console.log('Fetching token...');
