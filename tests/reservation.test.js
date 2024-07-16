@@ -15,16 +15,31 @@ const config = JSON.parse(configFile);
 
 let server;
 
-before(async () => {
-    // Initialisez le serveur et connectez-vous à MongoDB en utilisant mongoURI du fichier de configuration
-    server = app.listen(5000);
-    await mongoose.connect(config.mongoURI);
+before(async function() {
+    this.timeout(20000); // 20 seconds timeout for the before hook
+    try {
+        console.log("Starting server...");
+        server = app.listen(5000);
+        console.log("Connecting to MongoDB...");
+        await mongoose.connect(config.mongoURI, { useNewUrlParser: true, useUnifiedTopology: true });
+        console.log("Connected to MongoDB");
+    } catch (err) {
+        console.error("Error during setup:", err);
+    }
 });
 
-after(async () => {
-    // Fermez la connexion MongoDB et arrêtez le serveur après les tests
-    await mongoose.connection.close();
-    server.close();
+after(async function() {
+    this.timeout(20000); // 20 seconds timeout for the after hook
+    try {
+        console.log("Closing MongoDB connection...");
+        await mongoose.connection.close();
+        console.log("MongoDB connection closed");
+        console.log("Stopping server...");
+        server.close();
+        console.log("Server stopped");
+    } catch (err) {
+        console.error("Error during teardown:", err);
+    }
 });
 
 describe('Reservation API', () => {
@@ -34,7 +49,6 @@ describe('Reservation API', () => {
 
         if (!existingUser) {
             existingUser = new User({
-                // Ajoutez les détails de l'utilisateur nécessaires pour votre schéma
                 name: 'Test User',
                 email: 'testuser@example.com',
                 password: 'password123'
@@ -44,11 +58,10 @@ describe('Reservation API', () => {
 
         if (!existingCatway) {
             existingCatway = new Catway({
-                // Ajoutez les détails du catway nécessaires pour votre schéma
                 name: 'Test Catway',
-                catwayState: 'active', // Exemple de valeur pour catwayState
-                type: 'type1', // Utilisez une valeur valide pour type
-                catwayNumber: 1 // Exemple de valeur pour catwayNumber
+                catwayState: 'active',
+                type: 'type1',
+                catwayNumber: 1
             });
             await existingCatway.save();
         }
@@ -61,7 +74,6 @@ describe('Reservation API', () => {
                 endTime: '2024-07-03T12:00:00Z',
                 checkIn: '2024-07-03T10:00:00Z',
                 catway: existingCatway._id.toString(), // Utilisez un ObjectId valide pour le catway
-                // Ajoutez d'autres champs requis ici
             })
             .set('Accept', 'application/json');
 
@@ -69,7 +81,6 @@ describe('Reservation API', () => {
 
         // Vérifiez la réponse
         expect(res.status).to.be.equal(201); // Assurez-vous que le statut de la réponse est 201
-        // Vous pouvez également vérifier d'autres détails de la réponse si nécessaire
     });
 });
 
