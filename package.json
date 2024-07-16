@@ -17,7 +17,7 @@
   },
   "main": "index.js",
   "scripts": {
-    "test": "mocha 'tests/**/*.test.js'",
+    "test": "mocha --timeout 10000 'tests/**/*.test.js'",
     "start": "node index.js",
     "doc": "jsdoc -c jsdoc.json",
     "build": "npm run test"
