@@ -1,4 +1,4 @@
-name: Deploy to Custom Server
+name: Deploy to Heroku
 
 on:
   push:
@@ -16,18 +16,20 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v2
         with:
-          node-version: '16'  # Mettez à jour vers une version plus récente de Node.js
-
-      - name: Remove old node_modules and package-lock.json
-        run: |
-          rm -rf node_modules package-lock.json
+          node-version: '14'
 
       - name: Install dependencies
-        run: npm install --force  # Utilisez --force pour résoudre les problèmes de lien symbolique
+        run: npm install
 
       - name: Build application
         run: npm run build
 
-      - name: Deploy to Custom Server
-        run: |
-          ssh user@server 'bash -s' < deploy.sh
+      - name: Deploy to Heroku
+        uses: akhileshns/heroku-deploy@v3.12.12
+        with:
+          heroku_api_key: ${{ secrets.HEROKU_API_KEY }}
+          heroku_app_name: 'catway'  # Remplacez par le nom de votre application Heroku
+          heroku_email: 'YOUR_HEROKU_EMAIL'  # Remplacez par votre email Heroku
+
+      - name: Restart Heroku app (if necessary)
+        run: heroku restart -a 'catway'  # Remplacez par le nom de votre application Heroku
