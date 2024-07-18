@@ -29,8 +29,9 @@ app.use(express.static('public'));
 // Swagger documentation
 swaggerSetup(app);
 
-// Start server
-async function startServer() {
+let server;
+
+async function startServer(callback) {
   try {
     await connectDB(); // Se connecte à MongoDB en utilisant la configuration définie dans config/db.js
     console.log('MongoDB connected');
@@ -39,14 +40,17 @@ async function startServer() {
     process.exit(1);
   }
 
-  app.listen(port, () => {
+  server = app.listen(port, () => {
     console.log(`Server running on port ${port}`);
+    if (callback) callback();
   });
 }
 
-startServer();
+if (require.main === module) {
+  startServer();
+}
 
-module.exports = app;
+module.exports = { app, startServer, server };
 
 
 

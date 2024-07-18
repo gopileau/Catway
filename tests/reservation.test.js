@@ -1,25 +1,22 @@
 const path = require('path');
 const request = require('supertest');
 const mongoose = require('mongoose');
-const app = require(path.resolve(__dirname, '../server'));
+const { app, startServer, server } = require(path.resolve(__dirname, '../server'));
 const User = require('../models/User');
 const Catway = require('../models/Catway');
 const fs = require('fs');
 const chai = require('chai');
 const expect = chai.expect;
 
-
 const configPath = path.resolve(__dirname, '../config/test.json');
 const configFile = fs.readFileSync(configPath, 'utf8');
 const config = JSON.parse(configFile);
-
-let server;
 
 before(async function() {
     this.timeout(20000); 
     try {
         console.log("Starting server...");
-        server = app.listen(5000);
+        await startServer();
         console.log("Connecting to MongoDB...");
         await mongoose.connect(config.mongoURI, { useNewUrlParser: true, useUnifiedTopology: true });
         console.log("Connected to MongoDB");
