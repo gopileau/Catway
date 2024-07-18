@@ -7,7 +7,7 @@ const authRoutes = require('./routes/auth');
 const userRoutes = require('./routes/users');
 const catwayRoutes = require('./routes/catways');
 const reservationRoutes = require('./routes/reservations');
-const connectDB = require('./config/db');
+const { connectDB, closeDB } = require('./config/db');
 const swaggerSetup = require('./swagger');
 
 const app = express();
@@ -33,24 +33,21 @@ let server;
 
 async function startServer(callback) {
   try {
-    await connectDB(); // Se connecte à MongoDB en utilisant la configuration définie dans config/db.js
-    console.log('MongoDB connected');
+    await connectDB();
+    server = app.listen(port, () => {
+      console.log(`Server running on port ${port}`);
+      if (callback) callback();
+    });
   } catch (err) {
-    console.error('MongoDB connection error:', err.message);
+    console.error('Error starting server:', err.message);
     process.exit(1);
   }
-
-  server = app.listen(port, () => {
-    console.log(`Server running on port ${port}`);
-    if (callback) callback();
-  });
 }
 
 if (require.main === module) {
   startServer();
 }
 
-module.exports = { app, startServer, server };
-
+module.exports = { app, startServer, server, closeDB };
 
 

@@ -1,12 +1,12 @@
 const path = require('path');
 const request = require('supertest');
-const mongoose = require('mongoose');
 const { app, startServer, server } = require(path.resolve(__dirname, '../server'));
 const User = require('../models/User');
 const Catway = require('../models/Catway');
 const fs = require('fs');
 const chai = require('chai');
 const expect = chai.expect;
+const { connectDB, closeDB } = require('../config/db'); // Importer les fonctions de connexion
 
 const configPath = path.resolve(__dirname, '../config/test.json');
 const configFile = fs.readFileSync(configPath, 'utf8');
@@ -18,7 +18,7 @@ before(async function() {
         console.log("Starting server...");
         await startServer();
         console.log("Connecting to MongoDB...");
-        await mongoose.connect(config.mongoURI, { useNewUrlParser: true, useUnifiedTopology: true });
+        await connectDB(); // Connexion à MongoDB
         console.log("Connected to MongoDB");
     } catch (err) {
         console.error("Error during setup:", err);
@@ -30,7 +30,7 @@ after(async function() {
     this.timeout(20000); 
     try {
         console.log("Closing MongoDB connection...");
-        await mongoose.connection.close();
+        await closeDB(); // Déconnexion de MongoDB
         console.log("MongoDB connection closed");
         console.log("Stopping server...");
         server.close();
@@ -81,7 +81,6 @@ describe('Reservation API', () => {
         expect(res.status).to.be.equal(201);
     });
 });
-
 
 
 

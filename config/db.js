@@ -3,19 +3,32 @@ const config = require('config');
 
 const db = config.get('mongoURI');
 
+let dbConnection;
+
 const connectDB = async () => {
-  try {
-    await mongoose.connect(db, {
-      // Options deprecated, removed them
-    });
-    console.log('MongoDB connected');
-  } catch (err) {
-    console.error('MongoDB connection error:', err.message);
-    process.exit(1);
+  if (!dbConnection) {
+    try {
+      dbConnection = await mongoose.connect(db, {
+        useNewUrlParser: true,
+        useUnifiedTopology: true,
+      });
+      console.log('MongoDB connected');
+    } catch (err) {
+      console.error('MongoDB connection error:', err.message);
+      process.exit(1);
+    }
+  }
+  return dbConnection;
+};
+
+const closeDB = async () => {
+  if (dbConnection) {
+    await mongoose.disconnect();
+    console.log('MongoDB disconnected');
   }
 };
 
-module.exports = connectDB;
+module.exports = { connectDB, closeDB };
 
 
 
