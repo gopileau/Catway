@@ -1,7 +1,7 @@
 {
-  "mongoURI": "mongodb://localhost:27017/catway-reservation",
+  "mongoURI": "mongodb+srv://vanessagonzalez99:imVNQbOf8fjacMzx@cluster0.mongodb.net/catway-reservation?retryWrites=true&w=majority",
   "jwtSecret": "G4Z@9!1p_#9j*3mK_2S%F&4lPxCyNkGy"
 }
-  
+
 
   
