@@ -1,22 +1,24 @@
 const path = require('path');
 const request = require('supertest');
-const { app, startServer, server } = require(path.resolve(__dirname, '../server'));
+const { app, startServer, closeDB } = require(path.resolve(__dirname, '../server'));
 const User = require('../models/User');
 const Catway = require('../models/Catway');
 const fs = require('fs');
 const chai = require('chai');
 const expect = chai.expect;
-const { connectDB, closeDB } = require('../config/db'); // Importer les fonctions de connexion
+const { connectDB } = require('../config/db'); // Importer les fonctions de connexion
 
 const configPath = path.resolve(__dirname, '../config/test.json');
 const configFile = fs.readFileSync(configPath, 'utf8');
 const config = JSON.parse(configFile);
 
+let server; // Declare server variable here
+
 before(async function() {
     this.timeout(20000); 
     try {
         console.log("Starting server...");
-        await startServer();
+        server = await startServer(); // Ensure server is initialized here
         console.log("Connecting to MongoDB...");
         await connectDB(); // Connexion à MongoDB
         console.log("Connected to MongoDB");
@@ -33,7 +35,7 @@ after(async function() {
         await closeDB(); // Déconnexion de MongoDB
         console.log("MongoDB connection closed");
         console.log("Stopping server...");
-        server.close();
+        server.close(); // Ensure server is properly closed
         console.log("Server stopped");
     } catch (err) {
         console.error("Error during teardown:", err);
@@ -81,6 +83,7 @@ describe('Reservation API', () => {
         expect(res.status).to.be.equal(201);
     });
 });
+
 
 
 

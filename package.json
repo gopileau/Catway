@@ -23,7 +23,7 @@
     "test": "mocha --timeout 10000 'tests/**/*.test.js'",
     "start": "node server.js",
     "doc": "jsdoc -c jsdoc.json",
-    "build": "npm run test",
+    "build": "npm test",
     "postinstall": "husky install"
   },
   "dependencies": {
