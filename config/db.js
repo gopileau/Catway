@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
+const config = require('config');
 
-const db = process.env.MONGODB_URI; // Utilisez process.env pour les variables d'environnement
+const db = config.get('mongoURI');
 
 let dbConnection;
 
@@ -28,6 +29,7 @@ const closeDB = async () => {
 };
 
 module.exports = { connectDB, closeDB };
+
 
 
 

@@ -21,14 +21,14 @@
   },
   "main": "index.js",
   "scripts": {
-    "test": "mocha --timeout 10000 'tests/**/*.test.js'",
-    "start": "node server.js",
-    "build": "npm run lint && npm run test && npm run build-prod",
-    "build-prod": "webpack --mode production",
-    "lint": "eslint .",
-    "doc": "jsdoc -c jsdoc.json",
-    "postinstall": "husky install"
-  },
+  "test": "mocha --timeout 10000 'tests/**/*.test.js'",
+  "start": "node server.js",
+  "build": "npm run lint && npm run test && npm run build-prod",
+  "build-prod": "webpack --mode production",
+  "lint": "eslint .",
+  "doc": "jsdoc -c jsdoc.json",
+  "postinstall": "husky install"
+},
   "dependencies": {
     "accepts": "^1.3.8",
     "acorn": "^8.11.3",

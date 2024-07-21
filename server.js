@@ -34,17 +34,15 @@ let server;
 async function startServer(callback) {
   try {
     await connectDB();
-    const serverInstance = app.listen(port, () => {
+    server = app.listen(port, () => {
       console.log(`Server running on port ${port}`);
       if (callback) callback();
     });
-    return serverInstance; // Return the server instance
   } catch (err) {
     console.error('Error starting server:', err.message);
     process.exit(1);
   }
 }
-
 
 if (require.main === module) {
   startServer();
