@@ -1,24 +1,27 @@
 const mongoose = require('mongoose');
 const User = require('./models/User'); 
 
-mongoose.connect('mongodb://127.0.0.1:27017/catway-reservation', {
+mongoose.connect('mongodb://localhost:27017/catway-reservation', {
   useNewUrlParser: true,
   useUnifiedTopology: true
 });
 
 const createUser = async () => {
   try {
-    const existingUser = await User.findOne({ email: 'admin@example.com' });
+    const existingUser = await User.findOne({ email: 'testuser@example.com' });
 
     if (existingUser) {
-      console.log('User with email admin@example.com already exists');
+      console.log('User with email testuser@example.com already exists');
       return;
     }
 
+    const salt = await bcrypt.genSalt(10);
+    const hashedPassword = await bcrypt.hash('password123', salt);
+
     const newUser = new User({
-      name: 'admin',
-      email: 'admin@example.com',
-      password: 'password'
+      name: 'Test User',
+      email: 'testuser@example.com',
+      password: hashedPassword
     });
 
     await newUser.save();
@@ -31,5 +34,6 @@ const createUser = async () => {
 };
 
 createUser();
+
 
 
