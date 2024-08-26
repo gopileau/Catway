@@ -1,24 +1,11 @@
 const mongoose = require('mongoose');
-const Schema = mongoose.Schema;
 
-const CatwaySchema = new Schema({
-    name: {
-        type: String,
-        required: true
-    },
-    catwayState: {
-        type: String,
-        required: true
-    },
-    type: {
-        type: String,
-        required: true,
-        enum: ['type1', 'type2', 'type3']
-    },
-    catwayNumber: {
-        type: Number,
-        required: true
-    }
+const CatwaySchema = new mongoose.Schema({
+  number: { type: String, required: true },
+  type: { type: String, required: true },
+  state: { type: String, required: true }
+  // Ajoutez d'autres champs si nécessaire
 });
 
-module.exports = mongoose.model('Catway', CatwaySchema);
+// Vérifiez si le modèle existe déjà
+module.exports = mongoose.models.Catway || mongoose.model('Catway', CatwaySchema);

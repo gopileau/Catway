@@ -4,9 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard</title>
+    <link rel="stylesheet" href="styles.css"> 
 </head>
 <body>
     <h1>Dashboard</h1>
+
+    <!-- Message de succès/erreur -->
+    <div id="message" class="message"></div>
 
     <h2>Create User</h2>
     <form id="createUserForm">
@@ -28,18 +32,16 @@
         <label for="modifyUserEmail">Email:</label>
         <input type="email" id="modifyUserEmail" required>
         <label for="modifyUserPassword">Password:</label>
-        <input type="password" id="modifyUserPassword" required>
+        <input type="password" id="modifyUserPassword">
         <button type="submit">Modify</button>
     </form>
 
-   
     <h2>Delete User</h2>
     <form id="deleteUserForm">
         <label for="deleteUserId">User ID:</label>
         <input type="text" id="deleteUserId" required>
         <button type="submit">Delete</button>
     </form>
-
 
     <h2>Create Catway</h2>
     <form id="createCatwayForm">
@@ -96,6 +98,7 @@
         <button type="submit">Delete</button>
     </form>
 
+    <h2>Reservations</h2>
     <ul id="reservationList"></ul>
 
     <script src="js/dashboard.js"></script>

@@ -2,8 +2,7 @@ if (!localStorage.getItem('token')) {
     window.location.href = 'index.html';
 }
 
-fetchCatways();
-fetchReservations();
+// Définir toutes les fonctions d'abord
 
 async function fetchCatways() {
     try {
@@ -36,25 +35,39 @@ async function fetchReservations() {
                 'Authorization': `Bearer ${localStorage.getItem('token')}`
             }
         });
-        const reservations = await response.json();
-        const reservationList = document.getElementById('reservationList');
-        reservationList.innerHTML = ''; 
-        reservations.forEach(reservation => {
-            const listItem = document.createElement('li');
-            listItem.textContent = `Reservation for Catway ${reservation.catwayNumber} - ${reservation.clientName}`;
-            listItem.addEventListener('click', () => {
-                localStorage.setItem('reservationId', reservation._id);
-                window.location.href = 'reservation.html';
+
+        if (response.ok) {
+            const reservations = await response.json();
+            const reservationList = document.getElementById('reservationList');
+            reservationList.innerHTML = ''; 
+  
+            const uniqueReservations = reservations.filter((reservation, index, self) =>
+                index === self.findIndex((r) => (
+                    r.catway._id === reservation.catway._id && r.user._id === reservation.user._id
+                ))
+            );
+
+            uniqueReservations.forEach(reservation => {
+                const listItem = document.createElement('li'); 
+                const catwayName = reservation.catway ? reservation.catway.name : 'Inconnu';
+                const userName = reservation.user ? reservation.user.name : 'Inconnu';
+                listItem.textContent = `Réservation pour Catway ${catwayName} - ${userName}`;
+                reservationList.appendChild(listItem);
             });
-            reservationList.appendChild(listItem);
-        });
+
+        } else {
+            console.error('Erreur lors de la récupération des réservations:', response.statusText);
+        }
     } catch (error) {
-        console.error('Error:', error);
+        console.error('Erreur:', error);
     }
 }
 
+// Appeler les fonctions après leur définition
+fetchCatways();
+fetchReservations();
 
-// Create Catway
+// Créer Catway
 document.getElementById('createCatwayForm').addEventListener('submit', async (event) => {
     event.preventDefault();
     const catwayNumber = document.getElementById('catwayNumber').value;
@@ -83,7 +96,7 @@ document.getElementById('createCatwayForm').addEventListener('submit', async (ev
     }
 });
 
-// Create Reservation
+// Créer Réservation
 document.getElementById('createReservationForm').addEventListener('submit', async (event) => {
     event.preventDefault();
     const catwayNumber = document.getElementById('reservationCatwayNumber').value;
@@ -114,7 +127,7 @@ document.getElementById('createReservationForm').addEventListener('submit', asyn
     }
 });
 
-// Delete Reservation
+// Supprimer Réservation
 document.getElementById('deleteReservationForm').addEventListener('submit', async (event) => {
     event.preventDefault();
     const reservationId = document.getElementById('deleteReservationId').value;
@@ -139,7 +152,7 @@ document.getElementById('deleteReservationForm').addEventListener('submit', asyn
     }
 });
 
-// Delete Catway
+// Supprimer Catway
 document.getElementById('deleteCatwayForm').addEventListener('submit', async (event) => {
     event.preventDefault();
     const catwayId = document.getElementById('deleteCatwayId').value;
@@ -164,7 +177,7 @@ document.getElementById('deleteCatwayForm').addEventListener('submit', async (ev
     }
 });
 
-// Create User
+// Créer Utilisateur
 document.getElementById('createUserForm').addEventListener('submit', async (event) => {
     event.preventDefault();
     const userName = document.getElementById('userName').value;
@@ -192,7 +205,7 @@ document.getElementById('createUserForm').addEventListener('submit', async (even
     }
 });
 
-// Modify User
+// Modifier Utilisateur
 document.getElementById('modifyUserForm').addEventListener('submit', async (event) => {
     event.preventDefault();
     const userId = document.getElementById('modifyUserId').value;
@@ -221,7 +234,7 @@ document.getElementById('modifyUserForm').addEventListener('submit', async (even
     }
 });
 
-// Delete User
+// Supprimer Utilisateur
 document.getElementById('deleteUserForm').addEventListener('submit', async (event) => {
     event.preventDefault();
     const userId = document.getElementById('deleteUserId').value;
@@ -229,7 +242,8 @@ document.getElementById('deleteUserForm').addEventListener('submit', async (even
     try {
         const response = await fetch(`/api/users/${userId}`, {
             method: 'DELETE',
-            headers: {
+            headers:
+ {
                 'Authorization': `Bearer ${localStorage.getItem('token')}`
             }
         });
@@ -244,5 +258,4 @@ document.getElementById('deleteUserForm').addEventListener('submit', async (even
         console.error('Error:', error);
     }
 });
-
 

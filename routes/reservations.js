@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const Reservation = require('../models/Reservation'); 
+const Reservation = require('../models/Reservation');
 const { check, validationResult } = require('express-validator');
 
 // Route pour créer une réservation
@@ -37,15 +37,17 @@ router.post(
   }
 );
 
-
 router.get('/', async (req, res) => {
   try {
-    const reservations = await Reservation.find();
+    const reservations = await Reservation.find()
+      .populate('catway') 
+      .populate('user');  
     res.json(reservations);
   } catch (err) {
-    console.error(err.message);
-    res.status(500).send('Server error');
+    console.error(err);
+    res.status(500).json({ error: 'Erreur lors de la récupération des réservations' });
   }
 });
+
 
 module.exports = router;

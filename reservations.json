@@ -1,17 +1,16 @@
 [
-    {
-      "catwayNumber": 1,
-      "clientName": "John Doe",
-      "boatName": "Sea Breeze",
-      "checkIn": "2023-06-01T12:00:00Z",
-      "checkOut": "2023-06-05T12:00:00Z"
-    },
-    {
-      "catwayNumber": 2,
-      "clientName": "Jane Smith",
-      "boatName": "Wave Rider",
-      "checkIn": "2023-06-03T14:00:00Z",
-      "checkOut": "2023-06-07T14:00:00Z"
-    }
-  ]
+  {
+    "user": "userId1",
+    "catway": "catwayId1",
+    "startTime": "2024-08-20T14:00:00Z",
+    "endTime": "2024-08-20T16:00:00Z"
+  },
+  {
+    "user": "userId2",
+    "catway": "catwayId2",
+    "startTime": "2024-08-21T09:00:00Z",
+    "endTime": "2024-08-21T11:00:00Z"
+  }
+]
+
   

@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 
-const dbUri = process.env.MONGODB_URI ||'mongodb+srv://vanessagonzalez99:nAF6LFlgTUcJWMtv@cluster0.ht5l6iy.mongodb.net/catways-reservation?retryWrites=true&w=majority';
+const dbUri = process.env.MONGODB_URI || 'mongodb+srv://vanessagonzalez99:nAF6LFlgTUcJWMtv@cluster0.ht5l6iy.mongodb.net/catways-reservation?retryWrites=true&w=majority';
 
 async function connectDB() {
   try {
@@ -12,7 +12,6 @@ async function connectDB() {
     console.log('Attempting to connect to MongoDB with URI:', dbUri);
 
     await mongoose.connect(dbUri, {
-      // Les options dépréciées ont été enlevées
     });
     console.log('MongoDB connected');
   } catch (err) {
@@ -31,7 +30,6 @@ async function closeDB() {
 }
 
 module.exports = { connectDB, closeDB };
-
 
 
 
