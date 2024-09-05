@@ -31,7 +31,7 @@
     "build-prod": "webpack --mode production",
     "lint": "eslint .",
     "doc": "jsdoc -c jsdoc.json",
-    "postinstall": "if [ \"$NODE_ENV\" != \"production\" ]; then husky install; fi",
+    "postinstall": "cross-env NODE_ENV=development husky install",
     "heroku-postbuild": "npm install --no-cache"
   },
   "dependencies": {
