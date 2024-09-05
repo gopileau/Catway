@@ -1,19 +1,15 @@
-const Joi = require('joi');
+const mongoose = require('mongoose');
 
-const reservationSchema = Joi.object({
-    user: Joi.string().required(),
-    catway: Joi.string().required(),
-    clientName: Joi.string().required(),
-    boatName: Joi.string().required(),
-    startTime: Joi.date().iso().required(),
-    endTime: Joi.date().iso().required(),
-    checkIn: Joi.date().iso().required(),
-    checkOut: Joi.date().iso().required()
+const ReservationSchema = new mongoose.Schema({
+    user: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
+    catway: { type: mongoose.Schema.Types.ObjectId, ref: 'Catway', required: true },
+    clientName: { type: String, required: true },
+    boatName: { type: String, required: true },
+    startTime: { type: Date, required: true },
+    endTime: { type: Date, required: true },
+    checkIn: { type: Date, required: true },
+    checkOut: { type: Date, required: true }
 });
 
-const validateReservation = (data) => {
-    const { error } = reservationSchema.validate(data);
-    if (error) {
-        throw new Error(`Validation Error: ${error.details.map(x => x.message).join(', ')}`);
-    }
-};
+module.exports = mongoose.model('Reservation', ReservationSchema);
+

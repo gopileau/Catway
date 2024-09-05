@@ -1,8 +1,10 @@
 const express = require('express');
 const router = express.Router();
+const mongoose = require('mongoose');
 const Reservation = require('../models/Reservation');
 const Catway = require('../models/Catway');
 const { check, validationResult } = require('express-validator');
+const { validateReservation } = require('../validators/reservationValidator'); 
 
 // Route pour créer une réservation
 router.post(
@@ -26,9 +28,24 @@ router.post(
     const { user, catway, clientName, boatName, startTime, endTime, checkIn, checkOut } = req.body;
 
     try {
-      // Vérifiez que le catway existe
+      // Test pour vérifier si le Catway existe
+      console.log(`Searching for catway with ID: ${catway}`);
       const catwayExists = await Catway.findById(catway);
-      if (!catwayExists) return res.status(404).json({ message: 'Catway not found' });
+      if (!catwayExists) {
+        console.log('Catway not found');
+        return res.status(404).json({ message: 'Catway not found' });
+      }
+
+      // Convertir les chaînes de caractères en objets Date
+      const startTimeDate = new Date(startTime);
+      const endTimeDate = new Date(endTime);
+      const checkInDate = new Date(checkIn);
+      const checkOutDate = new Date(checkOut);
+
+      // Vérifier si les dates sont valides
+      if (isNaN(startTimeDate) || isNaN(endTimeDate) || isNaN(checkInDate) || isNaN(checkOutDate)) {
+        return res.status(400).json({ message: 'Invalid date format' });
+      }
 
       // Créez la réservation
       const newReservation = new Reservation({
@@ -36,53 +53,20 @@ router.post(
         catway,
         clientName,
         boatName,
-        startTime,
-        endTime,
-        checkIn,
-        checkOut
+        startTime: startTimeDate,
+        endTime: endTimeDate,
+        checkIn: checkInDate,
+        checkOut: checkOutDate
       });
 
       const reservation = await newReservation.save();
       res.status(201).json(reservation);
     } catch (err) {
-      console.error(err.message);
+      console.error('Error creating reservation:', err.message);
       res.status(500).send('Server error');
     }
   }
 );
-
-// Route pour obtenir toutes les réservations
-router.get('/', async (req, res) => {
-  try {
-    const reservations = await Reservation.find()
-      .populate('catway') 
-      .populate('user');  
-    res.json(reservations);
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ error: 'Erreur lors de la récupération des réservations' });
-  }
-});
-
-// Route pour obtenir les réservations pour un catway spécifique
-router.get('/catway/:catwayId', async (req, res) => {
-  const { catwayId } = req.params;
-
-  try {
-    const reservations = await Reservation.find({ catway: catwayId })
-      .populate('catway') 
-      .populate('user');
-    
-    if (reservations.length === 0) {
-      return res.status(404).json({ message: 'No reservations found for this catway' });
-    }
-
-    res.json(reservations);
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ error: 'Erreur lors de la récupération des réservations' });
-  }
-});
 
 // Route pour mettre à jour une réservation
 router.put('/:id', async (req, res) => {
