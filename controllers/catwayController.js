@@ -2,10 +2,11 @@ const Joi = require('joi');
 const Catway = require('../models/Catway');
 
 const catwaySchema = Joi.object({
-    catwayNumber: Joi.string().required(),
-    type: Joi.string().valid('long', 'short').required(),
-    catwayState: Joi.string().required()
-  });
+  catwayNumber: Joi.string().required(),  // Remplacez "number" par "catwayNumber"
+  type: Joi.string().valid('long', 'short').required(),
+  catwayState: Joi.string().required()    // Remplacez "state" par "catwayState"
+});
+
 
 exports.getCatways = async (req, res) => {
     try {
@@ -31,7 +32,13 @@ exports.createCatway = async (req, res) => {
   if (error) return res.status(400).json({ message: error.details[0].message });
 
   try {
-    const newCatway = new Catway(req.body);
+    // Convertir catwayNumber en number et catwayState en state
+    const newCatway = new Catway({
+      number: req.body.catwayNumber,
+      type: req.body.type,
+      state: req.body.catwayState
+    });
+
     await newCatway.save();
     res.status(201).json(newCatway);
   } catch (err) {

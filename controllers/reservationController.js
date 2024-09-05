@@ -1,60 +1,56 @@
 const Joi = require('joi');
 const Reservation = require('../models/Reservation');
 const mongoose = require('mongoose');
+const Catway = require('../models/Catway');
 
 // Définition du schéma Joi pour validation des données
+
 const reservationSchema = Joi.object({
     user: Joi.string().required(),
     catway: Joi.string().required(),
+    clientName: Joi.string().required(),
+    boatName: Joi.string().required(),
     startTime: Joi.date().iso().required(),
-    endTime: Joi.date().iso().required()
+    endTime: Joi.date().iso().required(),
+    checkIn: Joi.date().iso().required(),
+    checkOut: Joi.date().iso().required()
 });
-
-exports.getReservations = async (req, res) => {
-    try {
-        const catwayId = req.params.id;
-        const filter = catwayId ? { catway: catwayId } : {};
-        const reservations = await Reservation.find(filter);
-        res.json(reservations);
-    } catch (err) {
-        res.status(500).json({ message: err.message });
-    }
-};
-
-exports.getReservations = async (req, res) => {
-    try {
-        const catwayId = req.params.id;
-        const filter = catwayId ? { catwayNumber: catwayId } : {};
-        const reservations = await Reservation.find(filter);
-        res.json(reservations);  // Vérifiez que les données envoyées sont correctes
-    } catch (err) {
-        res.status(500).json({ message: err.message });
-    }
-};
 
 
 exports.createReservation = async (req, res) => {
-    // Validation des données
-    const { error } = reservationSchema.validate(req.body);
-    if (error) return res.status(400).json({ message: error.details[0].message });
-
     try {
-        // Création d'une nouvelle réservation
+        // Ajoutez l'ID du catway à req.body avant de valider
+        req.body.catway = req.params.id;
+
+        // Validez les données
+        const { error } = reservationSchema.validate(req.body);
+        if (error) return res.status(400).json({ message: error.details[0].message });
+
+        // Vérifiez que le catway existe
+        const catway = await Catway.findById(req.params.id);
+        if (!catway) return res.status(404).json({ message: 'Catway not found' });
+
+        // Créez la réservation
         const newReservation = new Reservation({
+            catway: req.params.id,  
             user: req.body.user,
-            catway: req.body.catway,
-            startTime: req.body.startTime,
-            endTime: req.body.endTime
+            clientName: req.body.clientName,
+            boatName: req.body.boatName,
+            checkIn: req.body.checkIn,
+            checkOut: req.body.checkOut
         });
+
         await newReservation.save();
         res.status(201).json(newReservation);
-    } catch (err) {
-        res.status(500).json({ message: err.message });
+    } catch (error) {
+        console.error('Error creating reservation:', error.message);
+        res.status(500).json({ error: error.message });
     }
 };
 
+
+
 exports.updateReservation = async (req, res) => {
-    // Validation des données
     const { error } = reservationSchema.validate(req.body);
     if (error) return res.status(400).json({ message: error.details[0].message });
 

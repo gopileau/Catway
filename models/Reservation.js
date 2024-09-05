@@ -1,16 +1,18 @@
 const mongoose = require('mongoose');
 
-const ReservationSchema = new mongoose.Schema({
-  catway: { type: mongoose.Schema.Types.ObjectId, ref: 'Catway', required: true },
-  user: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
-  clientName: { type: String, required: true },
-  boatName: { type: String, required: true },
-  startTime: { type: Date, required: true },
-  endTime: { type: Date, required: true },
-  checkIn: { type: Date, required: true },
-  checkOut: { type: Date, required: true },
-  // Ajoutez d'autres champs si nécessaire
+const Joi = require('joi');
+
+const reservationSchema = Joi.object({
+    user: Joi.string().required(),
+    catway: Joi.string().required(),
+    clientName: Joi.string().required(),
+    boatName: Joi.string().required(),
+    startTime: Joi.date().iso().required(),
+    endTime: Joi.date().iso().required(),
+    checkIn: Joi.date().iso().required(),
+    checkOut: Joi.date().iso().required()
 });
+
 
 // Vérifiez si le modèle existe déjà
 module.exports = mongoose.models.Reservation || mongoose.model('Reservation', ReservationSchema);

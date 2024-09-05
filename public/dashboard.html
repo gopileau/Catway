@@ -78,18 +78,35 @@
 
     <h2>Create Reservation</h2>
     <form id="createReservationForm">
+        <label for="userId">User ID:</label>
+        <input type="text" id="userId" required>
+        
         <label for="reservationCatwayNumber">Catway Number:</label>
         <input type="text" id="reservationCatwayNumber" required>
+        
         <label for="clientName">Client Name:</label>
         <input type="text" id="clientName" required>
+        
         <label for="boatName">Boat Name:</label>
         <input type="text" id="boatName" required>
+        
+        <label for="startTime">Start Time:</label>
+        <input type="datetime-local" id="startTime" required>
+        
+        <label for="endTime">End Time:</label>
+        <input type="datetime-local" id="endTime" required>
+        
         <label for="checkIn">Check-in:</label>
         <input type="datetime-local" id="checkIn" required>
+        
         <label for="checkOut">Check-out:</label>
         <input type="datetime-local" id="checkOut" required>
+        
+        
         <button type="submit">Create</button>
     </form>
+
+
 
     <h2>Delete Reservation</h2>
     <form id="deleteReservationForm">

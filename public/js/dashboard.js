@@ -97,35 +97,51 @@ document.getElementById('createCatwayForm').addEventListener('submit', async (ev
 });
 
 // Créer Réservation
-document.getElementById('createReservationForm').addEventListener('submit', async (event) => {
+document.getElementById('createReservationForm').addEventListener('submit', async function(event) {
     event.preventDefault();
+
+    const userId = document.getElementById('userId').value;
     const catwayNumber = document.getElementById('reservationCatwayNumber').value;
     const clientName = document.getElementById('clientName').value;
     const boatName = document.getElementById('boatName').value;
-    const checkIn = document.getElementById('checkIn').value;
+    const startTime = document.getElementById('startTime').value;  // Assurez-vous que cet ID est correct
+    const endTime = document.getElementById('endTime').value;      // Assurez-vous que cet ID est correct
+    const checkIn = document.getElementById('checkIn').value;  
     const checkOut = document.getElementById('checkOut').value;
+
+    const reservationData = {
+        user: userId,
+        catway: catwayNumber,
+        clientName: clientName,
+        boatName: boatName,
+        startTime: startTime,  // Assurez-vous que ces clés sont les bonnes
+        endTime: endTime,
+        checkIn: checkIn,
+        checkOut: checkOut
+    };
 
     try {
         const response = await fetch(`/api/catways/${catwayNumber}/reservations`, {
             method: 'POST',
             headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${localStorage.getItem('token')}`
+                'Content-Type': 'application/json'
             },
-            body: JSON.stringify({ clientName, boatName, checkIn, checkOut })
+            body: JSON.stringify(reservationData)
         });
 
+        const result = await response.json();
         if (response.ok) {
-            alert('Reservation created successfully');
-            fetchReservations();
+            alert('Reservation created successfully!');
         } else {
-            const errorData = await response.json();
-            alert(errorData.message);
+            alert('Error: ' + result.message);
         }
     } catch (error) {
-        console.error('Error:', error);
+        console.error('Error creating reservation:', error);
     }
 });
+
+    
+
 
 // Supprimer Réservation
 document.getElementById('deleteReservationForm').addEventListener('submit', async (event) => {

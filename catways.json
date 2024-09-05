@@ -1,13 +1,14 @@
 [
+  {
+    "number": "123",
+    "type": "long",
+    "state": "active"
+  }
+  ,
     {
-      "name": "Catway 1",
-      "type": "long",
-      "state": "available"
-    },
-    {
-      "name": "Catway 2",
-      "type": "short",
-      "state": "occupied"
+      "name": "123",
+      "type": "court",
+      "state": "occupe"
     }
   ]
   

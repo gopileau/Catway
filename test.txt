@@ -1,1 +1,1 @@
-admin@example.com
+testUser@example.com
