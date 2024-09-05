@@ -1,5 +1,3 @@
-const mongoose = require('mongoose');
-
 const Joi = require('joi');
 
 const reservationSchema = Joi.object({
@@ -13,6 +11,9 @@ const reservationSchema = Joi.object({
     checkOut: Joi.date().iso().required()
 });
 
-
-// Vérifiez si le modèle existe déjà
-module.exports = mongoose.models.Reservation || mongoose.model('Reservation', ReservationSchema);
+const validateReservation = (data) => {
+    const { error } = reservationSchema.validate(data);
+    if (error) {
+        throw new Error(`Validation Error: ${error.details.map(x => x.message).join(', ')}`);
+    }
+};
