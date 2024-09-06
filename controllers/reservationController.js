@@ -3,8 +3,7 @@ const Reservation = require('../models/Reservation');
 const mongoose = require('mongoose');
 const Catway = require('../models/Catway');
 
-// Définition du schéma Joi pour validation des données
-
+// Schéma Joi pour validation des données
 const reservationSchema = Joi.object({
     user: Joi.string().required(),
     catway: Joi.string().required(),
@@ -16,39 +15,35 @@ const reservationSchema = Joi.object({
     checkOut: Joi.date().iso().required()
 });
 
-
 exports.createReservation = async (req, res) => {
+    const { id } = req.params;
+    const reservationData = req.body;
+
     try {
-        // Ajoutez l'ID du catway à req.body avant de valider
-        req.body.catway = req.params.id;
+        // Trouver le Catway par numéro de voie au lieu de l'ID
+        const catway = await Catway.findOne({ voie: id });
+        if (!catway) {
+            return res.status(404).json({ message: 'Catway not found' });
+        }
 
-        // Validez les données
-        const { error } = reservationSchema.validate(req.body);
-        if (error) return res.status(400).json({ message: error.details[0].message });
-
-        // Vérifiez que le catway existe
-        const catway = await Catway.findById(req.params.id);
-        if (!catway) return res.status(404).json({ message: 'Catway not found' });
-
-        // Créez la réservation
         const newReservation = new Reservation({
-            catway: req.params.id,  
-            user: req.body.user,
-            clientName: req.body.clientName,
-            boatName: req.body.boatName,
-            checkIn: req.body.checkIn,
-            checkOut: req.body.checkOut
+            catway: catway._id,
+            user: reservationData.user,
+            clientName: reservationData.clientName,
+            boatName: reservationData.boatName,
+            startTime: reservationData.startTime,
+            endTime: reservationData.endTime,
+            checkIn: reservationData.checkIn,
+            checkOut: reservationData.checkOut
         });
 
         await newReservation.save();
         res.status(201).json(newReservation);
     } catch (error) {
         console.error('Error creating reservation:', error.message);
-        res.status(500).json({ error: error.message });
+        res.status(500).json({ message: error.message });
     }
 };
-
-
 
 exports.updateReservation = async (req, res) => {
     const { error } = reservationSchema.validate(req.body);
@@ -78,7 +73,6 @@ exports.deleteReservation = async (req, res) => {
         res.status(500).json({ message: err.message });
     }
 };
-
 
 
 

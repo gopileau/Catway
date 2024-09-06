@@ -1,6 +1,29 @@
 if (!localStorage.getItem('token')) {
     window.location.href = 'index.html';
 }
+async function loadCatways() {
+    try {
+        const response = await fetch('/api/catways');
+        const catways = await response.json();
+        console.log('Catways:', catways);  // Ajoute cette ligne pour vérifier les données
+
+        const catwaySelect = document.getElementById('reservationCatwayNumber');
+        catways.forEach(catway => {
+            console.log('Catway:', catway);  // Ajoute cette ligne pour vérifier chaque objet catway
+
+            const option = document.createElement('option');
+            option.value = catway.voie;  // Assure-toi que "voie" est le champ correct
+            option.text = catway.voie;   // Assure-toi que "voie" est le champ correct
+            catwaySelect.appendChild(option);
+        });
+    } catch (error) {
+        console.error('Error loading catways:', error);
+    }
+}
+
+loadCatways();
+
+
 
 // Définir toutes les fonctions d'abord
 
@@ -96,17 +119,44 @@ document.getElementById('createCatwayForm').addEventListener('submit', async (ev
     }
 });
 
+
+// Fonction pour peupler le sélecteur des catways
+async function populateCatwaySelect() {
+    try {
+        const response = await fetch('/api/catways');
+        const catways = await response.json();
+
+        const select = document.getElementById('reservationCatwayNumber');
+        select.innerHTML = '<option value="">Sélectionner un catway</option>'; // Clear previous options
+
+        catways.forEach(catway => {
+            const option = document.createElement('option');
+            option.value = catway._id; // Assuming catway._id is the unique identifier
+            option.textContent = `Catway ${catway.catwayNumber}`; // Adjust text as needed
+            select.appendChild(option);
+        });
+    } catch (error) {
+        console.error('Error fetching catways:', error);
+    }
+}
+
+// Appel de la fonction lorsque le DOM est complètement chargé
+document.addEventListener('DOMContentLoaded', () => {
+    populateCatwaySelect();
+});
+
 // Créer Réservation
 document.getElementById('createReservationForm').addEventListener('submit', async function(event) {
     event.preventDefault();
 
     const userId = document.getElementById('userId').value;
-    const catwayNumber = document.getElementById('reservationCatwayNumber').value;
+    const catwayNumber = document.getElementById('reservationCatwayNumber').value; // Assurez-vous que cette valeur n'est pas undefined
+    console.log('Catway Number:', catwayNumber); // Debugging line
     const clientName = document.getElementById('clientName').value;
     const boatName = document.getElementById('boatName').value;
-    const startTime = document.getElementById('startTime').value;  // Assurez-vous que cet ID est correct
-    const endTime = document.getElementById('endTime').value;      // Assurez-vous que cet ID est correct
-    const checkIn = document.getElementById('checkIn').value;  
+    const startTime = document.getElementById('startTime').value;
+    const endTime = document.getElementById('endTime').value;
+    const checkIn = document.getElementById('checkIn').value;
     const checkOut = document.getElementById('checkOut').value;
 
     const reservationData = {
@@ -114,7 +164,7 @@ document.getElementById('createReservationForm').addEventListener('submit', asyn
         catway: catwayNumber,
         clientName: clientName,
         boatName: boatName,
-        startTime: startTime,  // Assurez-vous que ces clés sont les bonnes
+        startTime: startTime,
         endTime: endTime,
         checkIn: checkIn,
         checkOut: checkOut
@@ -139,9 +189,6 @@ document.getElementById('createReservationForm').addEventListener('submit', asyn
         console.error('Error creating reservation:', error);
     }
 });
-
-    
-
 
 // Supprimer Réservation
 document.getElementById('deleteReservationForm').addEventListener('submit', async (event) => {

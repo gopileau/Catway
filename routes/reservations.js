@@ -104,4 +104,24 @@ router.delete('/:id', async (req, res) => {
   }
 });
 
+// Route pour obtenir toutes les réservations
+router.get('/', async (req, res) => {
+  try {
+    const reservations = await Reservation.find();
+    res.json(reservations);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+// Route pour obtenir une réservation par ID
+router.get('/:id', async (req, res) => {
+  try {
+    const reservation = await Reservation.findById(req.params.id);
+    if (!reservation) return res.status(404).json({ message: 'Reservation not found' });
+    res.json(reservation);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
 module.exports = router;
