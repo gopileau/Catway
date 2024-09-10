@@ -3,126 +3,122 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard</title>
-    <link rel="stylesheet" href="styles.css"> 
+    <title>Tableau de Bord</title>
+    <link rel="stylesheet" href="styles.css">
+
 </head>
 <body>
-    <h1>Dashboard</h1>
-
-    <!-- Message de succès/erreur -->
-    <div id="message" class="message"></div>
-
-    <h2>Create User</h2>
-    <form id="createUserForm">
-        <label for="userName">Name:</label>
-        <input type="text" id="userName" required>
-        <label for="userEmail">Email:</label>
-        <input type="email" id="userEmail" required>
-        <label for="userPassword">Password:</label>
-        <input type="password" id="userPassword" required>
-        <button type="submit">Create</button>
-    </form>
-
-    <h2>Modify User</h2>
-    <form id="modifyUserForm">
-        <label for="modifyUserId">User ID:</label>
-        <input type="text" id="modifyUserId" required>
-        <label for="modifyUserName">Name:</label>
-        <input type="text" id="modifyUserName" required>
-        <label for="modifyUserEmail">Email:</label>
-        <input type="email" id="modifyUserEmail" required>
-        <label for="modifyUserPassword">Password:</label>
-        <input type="password" id="modifyUserPassword">
-        <button type="submit">Modify</button>
-    </form>
-
-    <h2>Delete User</h2>
-    <form id="deleteUserForm">
-        <label for="deleteUserId">User ID:</label>
-        <input type="text" id="deleteUserId" required>
-        <button type="submit">Delete</button>
-    </form>
-
-    <h2>Create Catway</h2>
+    <h1>Tableau de Bord</h1>
+    
+    <!-- Formulaires pour gérer les catways -->
+    <h2>Créer un Catway</h2>
     <form id="createCatwayForm">
-        <label for="catwayNumber">Catway Number:</label>
-        <input type="text" id="catwayNumber" required>
+        <label for="catwayNumber">Numéro du Catway:</label>
+        <input type="text" id="catwayNumber" name="catwayNumber" required>
         <label for="type">Type:</label>
-        <select id="type" required>
-            <option value="long">Long</option>
-            <option value="short">Short</option>
-        </select>
-        <label for="catwayState">State:</label>
-        <input type="text" id="catwayState" required>
-        <button type="submit">Create</button>
+        <input type="text" id="type" name="type" required>
+        <label for="catwayState">État:</label>
+        <input type="text" id="catwayState" name="catwayState" required>
+        <button type="submit">Créer Catway</button>
     </form>
 
-    <h2>Modify Catway State</h2>
-    <form id="modifyCatwayStateForm">
-        <label for="modifyCatwayId">Catway ID:</label>
-        <input type="text" id="modifyCatwayId" required>
-        <label for="modifyCatwayState">New State:</label>
-        <input type="text" id="modifyCatwayState" required>
-        <button type="submit">Modify</button>
+    <h2>Modifier un Catway</h2>
+    <form id="updateCatwayForm">
+        <label for="updateCatwayId">ID Catway:</label>
+        <input type="text" id="updateCatwayId" name="updateCatwayId" required>
+        <label for="updateCatwayStatus">État:</label>
+        <input type="text" id="updateCatwayStatus" name="updateCatwayStatus" required>
+        <button type="submit">Modifier Catway</button>
     </form>
 
-    <h2>Delete Catway</h2>
+    <h2>Supprimer un Catway</h2>
     <form id="deleteCatwayForm">
-        <label for="deleteCatwayId">Catway ID:</label>
-        <input type="text" id="deleteCatwayId" required>
-        <button type="submit">Delete</button>
+        <label for="deleteCatwayId">ID Catway:</label>
+        <input type="text" id="deleteCatwayId" name="deleteCatwayId" required>
+        <button type="submit">Supprimer Catway</button>
     </form>
 
-    <h2>Catways</h2>
+    <h2>Détails d’un Catway</h2>
+    <form id="viewCatwayForm">
+        <label for="viewCatwayId">ID Catway:</label>
+        <input type="text" id="viewCatwayId" name="viewCatwayId" required>
+        <button type="submit">Voir Détails</button>
+    </form>
+
+    
+    <!-- Liste des catways et réservations -->
+    <h2>Liste des Catways</h2>
     <ul id="catwayList"></ul>
 
-    <h2>Create Reservation</h2>
+    <h2>Créer une Réservation</h2>
     <form id="createReservationForm">
-        <label for="userId">User ID:</label>
-        <input type="text" id="userId" required>
-        
-        <label for="reservationCatwayNumber">Catway Number:</label>
-        <select id="reservationCatwayNumber" required>
-            <option value="">Sélectionner un catway</option>
-            <!-- Les options seront ajoutées dynamiquement ici -->
-        </select>
-        <label for="clientName">Client Name:</label>
-        <input type="text" id="clientName" required>
-        
-        <label for="boatName">Boat Name:</label>
-        <input type="text" id="boatName" required>
-        
-        <label for="startTime">Start Time:</label>
-        <input type="datetime-local" id="startTime" required>
-        
-        <label for="endTime">End Time:</label>
-        <input type="datetime-local" id="endTime" required>
-        
-        <label for="checkIn">Check-in:</label>
-        <input type="datetime-local" id="checkIn" required>
-        
-        <label for="checkOut">Check-out:</label>
-        <input type="datetime-local" id="checkOut" required>
-        
-        
-        <button type="submit">Create</button>
+        <label for="userId">ID Utilisateur:</label>
+        <input type="text" id="userId" name="userId" required>
+        <label for="reservationCatwayNumber">Numéro du Catway:</label>
+        <select id="reservationCatwayNumber"></select>
+        <label for="clientName">Nom du Client:</label>
+        <input type="text" id="clientName" name="clientName" required>
+        <label for="boatName">Nom du Bateau:</label>
+        <input type="text" id="boatName" name="boatName" required>
+        <label for="startTime">Heure de Début:</label>
+        <input type="datetime-local" id="startTime" name="startTime" required>
+        <label for="endTime">Heure de Fin:</label>
+        <input type="datetime-local" id="endTime" name="endTime" required>
+        <label for="checkIn">Check-In:</label>
+        <input type="date" id="checkIn" name="checkIn" required>
+        <label for="checkOut">Check-Out:</label>
+        <input type="date" id="checkOut" name="checkOut" required>
+        <button type="submit">Créer Réservation</button>
     </form>
 
+    <h2>Supprimer une Réservation</h2>
+<form id="deleteReservationForm">
+    <label for="deleteReservationId">ID Réservation:</label>
+    <input type="text" id="deleteReservationId" name="deleteReservationId" required>
+    <button type="submit">Supprimer Réservation</button>
+</form>
 
+<h2>Détails d’une Réservation</h2>
+<form id="viewReservationForm">
+    <label for="viewReservationId">ID Réservation:</label>
+    <input type="text" id="viewReservationId" name="viewReservationId" required>
+    <button type="submit">Voir Détails</button>
+</form>
 
-    <h2>Delete Reservation</h2>
-    <form id="deleteReservationForm">
-        <label for="deleteReservationId">Reservation ID:</label>
-        <input type="text" id="deleteReservationId" required>
-        <button type="submit">Delete</button>
-    </form>
-
-    <h2>Reservations</h2>
+    <!-- Formulaires pour créer des réservations -->
+    <h2>Liste des Réservations</h2>
     <ul id="reservationList"></ul>
 
+    <!-- Formulaires pour la gestion des utilisateurs -->
+    <h2>Créer un Utilisateur</h2>
+    <form id="createUserForm">
+        <label for="userName">Nom:</label>
+        <input type="text" id="userName" name="userName" required>
+        <label for="userEmail">Email:</label>
+        <input type="email" id="userEmail" name="userEmail" required>
+        <label for="userPassword">Mot de Passe:</label>
+        <input type="password" id="userPassword" name="userPassword" required>
+        <button type="submit">Créer Utilisateur</button>
+    </form>
+
+    <h2>Modifier un Utilisateur</h2>
+    <form id="updateUserForm">
+        <label for="updateUserId">ID Utilisateur:</label>
+        <input type="text" id="updateUserId" name="updateUserId" required>
+        <label for="updateUserName">Nom:</label>
+        <input type="text" id="updateUserName" name="updateUserName">
+        <label for="updateUserEmail">Email:</label>
+        <input type="email" id="updateUserEmail" name="updateUserEmail">
+        <button type="submit">Modifier Utilisateur</button>
+    </form>
+
+<h2>Supprimer un Utilisateur</h2>
+<form id="deleteUserForm">
+    <label for="deleteUserId">ID Utilisateur:</label>
+    <input type="text" id="deleteUserId" name="deleteUserId" required>
+    <button type="submit">Supprimer Utilisateur</button>
+</form>
     <script src="js/dashboard.js"></script>
 </body>
 </html>
-
-
 

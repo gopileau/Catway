@@ -5,15 +5,15 @@ async function loadCatways() {
     try {
         const response = await fetch('/api/catways');
         const catways = await response.json();
-        console.log('Catways:', catways);  // Ajoute cette ligne pour vérifier les données
+        console.log('Catways:', catways);  
 
         const catwaySelect = document.getElementById('reservationCatwayNumber');
         catways.forEach(catway => {
-            console.log('Catway:', catway);  // Ajoute cette ligne pour vérifier chaque objet catway
+            console.log('Catway:', catway); 
 
             const option = document.createElement('option');
-            option.value = catway.voie;  // Assure-toi que "voie" est le champ correct
-            option.text = catway.voie;   // Assure-toi que "voie" est le champ correct
+            option.value = catway.voie;  
+            option.text = catway.voie;   
             catwaySelect.appendChild(option);
         });
     } catch (error) {

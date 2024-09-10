@@ -16,25 +16,25 @@ const reservationSchema = Joi.object({
 });
 
 exports.createReservation = async (req, res) => {
-    const { id } = req.params;
-    const reservationData = req.body;
+    const { catwayId } = req.params;
+    const { user, clientName, boatName, startTime, endTime, checkIn, checkOut } = req.body;
 
     try {
-        // Trouver le Catway par numéro de voie au lieu de l'ID
-        const catway = await Catway.findOne({ voie: id });
+        // Trouver le Catway par ID
+        const catway = await Catway.findById(catwayId);
         if (!catway) {
             return res.status(404).json({ message: 'Catway not found' });
         }
 
         const newReservation = new Reservation({
-            catway: catway._id,
-            user: reservationData.user,
-            clientName: reservationData.clientName,
-            boatName: reservationData.boatName,
-            startTime: reservationData.startTime,
-            endTime: reservationData.endTime,
-            checkIn: reservationData.checkIn,
-            checkOut: reservationData.checkOut
+            user,
+            catway: catwayId,
+            clientName,
+            boatName,
+            startTime: new Date(startTime),
+            endTime: new Date(endTime),
+            checkIn: new Date(checkIn),
+            checkOut: new Date(checkOut)
         });
 
         await newReservation.save();
@@ -44,6 +44,7 @@ exports.createReservation = async (req, res) => {
         res.status(500).json({ message: error.message });
     }
 };
+
 
 exports.updateReservation = async (req, res) => {
     const { error } = reservationSchema.validate(req.body);

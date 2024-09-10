@@ -9,7 +9,7 @@ const {
     updateCatway,
     patchCatway,
     deleteCatway
-} = require('../controllers/catwayController');
+} = require('../controllers/catwayController');  // Une seule fois les imports
 
 // Routes pour les catways
 router.get('/', getCatways);
@@ -19,7 +19,7 @@ router.put('/:id', updateCatway);
 router.patch('/:id', patchCatway);
 router.delete('/:id', deleteCatway);
 
-// Route pour les réservations associées à un catway
-router.post('/:id/reservations', createReservation);
+// Route pour créer une réservation pour un catway spécifique
+router.post('/:catwayId/reservations', createReservation);
 
 module.exports = router;
