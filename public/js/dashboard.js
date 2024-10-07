@@ -28,28 +28,92 @@ loadCatways();
 // Définir toutes les fonctions d'abord
 
 async function fetchCatways() {
-    try {
-        const response = await fetch('/api/catways', {
-            headers: {
-                'Authorization': `Bearer ${localStorage.getItem('token')}`
-            }
-        });
-        const catways = await response.json();
-        const catwayList = document.getElementById('catwayList');
-        catwayList.innerHTML = ''; 
-        catways.forEach(catway => {
-            const listItem = document.createElement('li');
-            listItem.textContent = `Catway ${catway.catwayNumber} - ${catway.type}`;
-            listItem.addEventListener('click', () => {
-                localStorage.setItem('catwayId', catway._id);
-                window.location.href = 'catway.html';
-            });
-            catwayList.appendChild(listItem);
-        });
-    } catch (error) {
-        console.error('Error:', error);
-    }
+  try {
+    const response = await fetch('/api/catways', {
+      headers: {
+        'Authorization': `Bearer ${localStorage.getItem('token')}`
+      }
+    });
+    const catways = await response.json();
+    console.log('Catways:', catways);
+    const catwayList = document.getElementById('catwayList');
+    catwayList.innerHTML = '';
+    catways.forEach(catway => {
+      const listItem = document.createElement('li');
+      listItem.textContent = `Catway ${catway.catwayNumber} - ${catway.type}`;
+      catwayList.appendChild(listItem);
+    });
+  } catch (error) {
+    console.error('Error:', error);
+  }
 }
+
+document.addEventListener('DOMContentLoaded', () => {
+  fetchCatways();
+});
+async function fetchCatwayDetails(id) {
+    console.log('Catway ID :', id);
+    try {
+      const response = await fetch(`/api/catways/${id}`, {
+        headers: {
+          'Authorization': `Bearer ${localStorage.getItem('token')}`
+        }
+      });
+      if (response.ok) {
+        const catwayDetails = await response.json();
+        console.log('Catway Details :', catwayDetails);
+        // Vérifiez si les données du catway sont correctement récupérées
+        if (catwayDetails && catwayDetails.number && catwayDetails.type && catwayDetails.state) {
+          // Afficher les détails du catway ici
+          document.getElementById('catway-number').innerHTML = catwayDetails.number;
+          document.getElementById('catway-type').innerHTML = catwayDetails.type;
+          document.getElementById('catway-state').innerHTML = catwayDetails.state;
+        } else {
+          console.error('Les données du catway ne sont pas correctement récupérées');
+        }
+      } else {
+        console.error('Erreur lors de la récupération des détails du catway:', response.statusText);
+        // Afficher un message d'erreur si nécessaire
+        const errorMessageElement = document.getElementById('errorMessage');
+        if (errorMessageElement) {
+          errorMessageElement.innerHTML = `Erreur lors de la récupération des détails du catway: ${response.statusText}`;
+        } else {
+          console.error('L\'élément errorMessage n\'est pas défini');
+        }
+      }
+    } catch (error) {
+      console.error('Erreur:', error);
+      // Afficher un message d'erreur si nécessaire
+      const errorMessageElement = document.getElementById('errorMessage');
+      if (errorMessageElement) {
+        errorMessageElement.innerHTML = `Erreur lors de la récupération des détails du catway: ${error.message}`;
+      } else {
+        console.error('L\'élément errorMessage n\'est pas défini');
+      }
+    }
+  }
+  async function updateCatway(id) {
+    try {
+      const response = await fetch(`/api/catways/${id}`, {
+        method: 'PATCH',
+        headers: {
+          'Authorization': `Bearer ${localStorage.getItem('token')}`,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          // données à mettre à jour
+        })
+      });
+      if (response.ok) {
+        console.log('Catway mis à jour avec succès');
+      } else {
+        console.error('Erreur lors de la mise à jour du catway:', response.statusText);
+      }
+    } catch (error) {
+      console.error('Erreur:', error);
+    }
+  }
+    
 
 async function fetchReservations() {
     try {
@@ -63,13 +127,13 @@ async function fetchReservations() {
             const reservations = await response.json();
             const reservationList = document.getElementById('reservationList');
             reservationList.innerHTML = ''; 
-  
+    
             const uniqueReservations = reservations.filter((reservation, index, self) =>
                 index === self.findIndex((r) => (
                     r.catway._id === reservation.catway._id && r.user._id === reservation.user._id
                 ))
             );
-
+    
             uniqueReservations.forEach(reservation => {
                 const listItem = document.createElement('li'); 
                 const catwayName = reservation.catway ? reservation.catway.name : 'Inconnu';
@@ -77,16 +141,15 @@ async function fetchReservations() {
                 listItem.textContent = `Réservation pour Catway ${catwayName} - ${userName}`;
                 reservationList.appendChild(listItem);
             });
-
+    
         } else {
             console.error('Erreur lors de la récupération des réservations:', response.statusText);
         }
     } catch (error) {
         console.error('Erreur:', error);
     }
-}
+    }
 
-// Appeler les fonctions après leur définition
 fetchCatways();
 fetchReservations();
 
@@ -106,7 +169,7 @@ document.getElementById('createCatwayForm').addEventListener('submit', async (ev
             },
             body: JSON.stringify({ catwayNumber, type, catwayState })
         });
-
+    
         if (response.ok) {
             alert('Catway created successfully');
             fetchCatways();
@@ -128,7 +191,7 @@ async function populateCatwaySelect() {
 
         const select = document.getElementById('reservationCatwayNumber');
         select.innerHTML = '<option value="">Sélectionner un catway</option>'; // Clear previous options
-
+    
         catways.forEach(catway => {
             const option = document.createElement('option');
             option.value = catway._id; // Assuming catway._id is the unique identifier
@@ -150,8 +213,8 @@ document.getElementById('createReservationForm').addEventListener('submit', asyn
     event.preventDefault();
 
     const userId = document.getElementById('userId').value;
-    const catwayNumber = document.getElementById('reservationCatwayNumber').value; // Assurez-vous que cette valeur n'est pas undefined
-    console.log('Catway Number:', catwayNumber); // Debugging line
+    const catwayNumber = document.getElementById('reservationCatwayNumber').value; 
+    console.log('Catway Number:', catwayNumber); 
     const clientName = document.getElementById('clientName').value;
     const boatName = document.getElementById('boatName').value;
     const startTime = document.getElementById('startTime').value;
@@ -202,7 +265,7 @@ document.getElementById('deleteReservationForm').addEventListener('submit', asyn
                 'Authorization': `Bearer ${localStorage.getItem('token')}`
             }
         });
-
+    
         if (response.ok) {
             alert('Reservation deleted successfully');
             fetchReservations();
@@ -215,59 +278,57 @@ document.getElementById('deleteReservationForm').addEventListener('submit', asyn
     }
 });
 
+// Modifier Catway
+const updateCatwayForm = document.getElementById('updateCatwayForm');
+
+updateCatwayForm.addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const updateCatwayId = document.getElementById('updateCatwayId').value;
+  const updateCatwayStatus = document.getElementById('updateCatwayStatus').value;
+
+  try {
+    const response = await fetch(`/api/catways/${updateCatwayId}`, {
+      method: 'PATCH',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ state: updateCatwayStatus }),
+    });
+
+    if (response.ok) {
+      console.log('Catway mis à jour avec succès');
+    } else {
+      console.error('Erreur lors de la mise à jour du catway');
+    }
+  } catch (error) {
+    console.error(error);
+  }
+});
+
 // Supprimer Catway
-document.getElementById('deleteCatwayForm').addEventListener('submit', async (event) => {
-    event.preventDefault();
-    const catwayId = document.getElementById('deleteCatwayId').value;
+const deleteCatwayForm = document.getElementById('deleteCatwayForm');
 
-    try {
-        const response = await fetch(`/api/catways/${catwayId}`, {
-            method: 'DELETE',
-            headers: {
-                'Authorization': `Bearer ${localStorage.getItem('token')}`
-            }
-        });
+deleteCatwayForm.addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const deleteCatwayId = document.getElementById('deleteCatwayId').value;
 
-        if (response.ok) {
-            alert('Catway deleted successfully');
-            fetchCatways();
-        } else {
-            const errorData = await response.json();
-            alert(errorData.message);
-        }
-    } catch (error) {
-        console.error('Error:', error);
+  try {
+    const response = await fetch(`/api/catways/${deleteCatwayId}`, {
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+
+    if (response.ok) {
+      console.log('Catway supprimé avec succès');
+    } else {
+      console.error('Erreur lors de la suppression du catway');
     }
+  } catch (error) {
+    console.error(error);
+  }
 });
-
-// Créer Utilisateur
-document.getElementById('createUserForm').addEventListener('submit', async (event) => {
-    event.preventDefault();
-    const userName = document.getElementById('userName').value;
-    const userEmail = document.getElementById('userEmail').value;
-    const userPassword = document.getElementById('userPassword').value;
-
-    try {
-        const response = await fetch('/api/users', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${localStorage.getItem('token')}`
-            },
-            body: JSON.stringify({ name: userName, email: userEmail, password: userPassword })
-        });
-
-        if (response.ok) {
-            alert('User created successfully');
-        } else {
-            const errorData = await response.json();
-            alert(errorData.message);
-        }
-    } catch (error) {
-        console.error('Error:', error);
-    }
-});
-
 // Modifier Utilisateur
 document.getElementById('modifyUserForm').addEventListener('submit', async (event) => {
     event.preventDefault();
@@ -285,7 +346,7 @@ document.getElementById('modifyUserForm').addEventListener('submit', async (even
             },
             body: JSON.stringify({ name: userName, email: userEmail, password: userPassword })
         });
-
+    
         if (response.ok) {
             alert('User modified successfully');
         } else {

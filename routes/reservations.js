@@ -4,6 +4,7 @@ const mongoose = require('mongoose');
 const Reservation = require('../models/Reservation');
 const Catway = require('../models/Catway');
 const { check, validationResult } = require('express-validator');
+const Joi = require('joi');
 const { createReservation } = require('../controllers/reservationController');
 
 
@@ -42,9 +43,7 @@ router.post(
       const ObjectId = mongoose.Types.ObjectId;
       if (!ObjectId.isValid(user)) {
         return res.status(400).json({ message: 'Invalid user ID' });
-      }
-      const userId = new ObjectId(user);
-
+    }
       // Convertir les chaînes de caractères en objets Date
       const startTimeDate = new Date(startTime);
       const endTimeDate = new Date(endTime);
@@ -103,30 +102,18 @@ router.put('/:id', async (req, res) => {
   }
 });
 
-// Route pour supprimer une réservation
-router.delete('/:id', async (req, res) => {
-  const { id } = req.params;
-
-  console.log('ID de la réservation à supprimer:', id);  // Log l'ID reçu
-
-  if (!mongoose.Types.ObjectId.isValid(id)) {
-    console.log('ID non valide:', id);  // Log si l'ID est invalide
-    return res.status(400).json({ message: 'Invalid reservation ID' });
-  }
+// Suppression d'une réservation par son ID
+router.delete('/:catwayId/reservations/:reservationId', async (req, res) => {
+  const { catwayId, reservationId } = req.params;
 
   try {
-    const reservation = await Reservation.findById(id);
+    const reservation = await Reservation.findByIdAndDelete(reservationId);
     if (!reservation) {
-      console.log('Réservation non trouvée pour cet ID:', id);  // Log si la réservation n'est pas trouvée
-      return res.status(404).json({ message: 'Reservation not found' });
+      return res.status(404).send('Reservation not found');
     }
-
-    await reservation.remove();
-    console.log('Réservation supprimée avec succès:', id);  // Log après la suppression
-    res.json({ message: 'Reservation deleted' });
-  } catch (err) {
-    console.error('Erreur lors de la suppression de la réservation:', err.message);  // Log les erreurs du serveur
-    res.status(500).json({ message: err.message });
+    res.status(200).send(reservation);
+  } catch (error) {
+    res.status(400).send('Error deleting reservation');
   }
 });
 

@@ -1,0 +1,7 @@
+<!-- dans votre fichier views/updateCatway.ejs -->
+<form action="/api/catways/update/<%= catway._id %>" method="patch">
+    <input type="text" name="number" value="<%= catway.number %>">
+    <input type="text" name="type" value="<%= catway.type %>">
+    <input type="text" name="state" value="<%= catway.state %>">
+    <button type="submit">Mettre à jour</button>
+  </form>

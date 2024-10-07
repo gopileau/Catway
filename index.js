@@ -18,5 +18,7 @@ ps.on('close', (code) => {
     console.log(`Le processus enfant s'est terminé avec le code ${code}`);
 });
 
+<a href="/api/catways/update/<%= catway._id %>">Mettre à jour</a>
+
 
 

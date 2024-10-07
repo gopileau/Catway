@@ -29,14 +29,16 @@
         <label for="updateCatwayStatus">État:</label>
         <input type="text" id="updateCatwayStatus" name="updateCatwayStatus" required>
         <button type="submit">Modifier Catway</button>
-    </form>
+      </form>
 
-    <h2>Supprimer un Catway</h2>
-    <form id="deleteCatwayForm">
-        <label for="deleteCatwayId">ID Catway:</label>
-        <input type="text" id="deleteCatwayId" name="deleteCatwayId" required>
-        <button type="submit">Supprimer Catway</button>
-    </form>
+      <h2>Supprimer un Catway</h2>
+      <form id="deleteCatwayForm" onsubmit="deleteCatway(event)">
+          <label for="deleteCatwayId">ID Catway:</label>
+          <input type="text" id="deleteCatwayId" placeholder="Entrez l'ID du Catway" required>
+          <button type="submit">Supprimer le Catway</button>
+      </form>
+      
+      
 
     <h2>Détails d’un Catway</h2>
     <form id="viewCatwayForm">
@@ -44,11 +46,14 @@
         <input type="text" id="viewCatwayId" name="viewCatwayId" required>
         <button type="submit">Voir Détails</button>
     </form>
+    
 
     
     <!-- Liste des catways et réservations -->
     <h2>Liste des Catways</h2>
-    <ul id="catwayList"></ul>
+<select id="catwaySelect">
+    <option value="">-- Choisissez un catway --</option>
+</select>
 
     <h2>Créer une Réservation</h2>
     <form id="createReservationForm">
