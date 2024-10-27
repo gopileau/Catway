@@ -22,24 +22,46 @@ exports.login = async (req, res) => {
         const isMatch = await bcrypt.compare(password, user.password);
         if (!isMatch) return res.status(400).json({ message: 'Invalid email or password' });
 
-        const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, { expiresIn: '1h' });
-        res.json({ token });
+        // Génération du token JWT
+        const token = jwt.sign({ userId: user._id }, config.get('jwtSecret'), { expiresIn: '1h' });
+        console.log('Token généré:', token);
+        
+        res.json({ token }); // Renvoie le token ici
     } catch (error) {
         res.status(500).json({ error: error.message });
+    }
+};
+
+
+
+exports.refreshToken = (req, res) => {
+    const refreshToken = req.body.refreshToken;
+    if (!refreshToken) {
+        return res.status(401).json({ message: 'Refresh token required' });
+    }
+    try {
+        const decoded = jwt.verify(refreshToken, process.env.REFRESH_SECRET);
+        const newToken = jwt.sign({ userId: decoded.userId }, process.env.JWT_SECRET, { expiresIn: '1h' });
+        res.json({ token: newToken });
+    } catch (error) {
+        res.status(403).json({ message: 'Invalid refresh token' });
     }
 };
 
 exports.getUserEmail = async (req, res) => {
     const userId = req.params.id;
 
+    // Vérification de l'ID
+    if (!mongoose.Types.ObjectId.isValid(userId)) {
+        return res.status(400).json({ message: 'ID utilisateur invalide' });
+    }
+
     try {
         const user = await User.findById(userId);
-        if (!user) {
-            return res.status(404).json({ message: 'User not found' });
-        }
+        if (!user) return res.status(404).json({ message: 'Utilisateur non trouvé' });
         res.json({ email: user.email });
     } catch (err) {
         console.error(err.message);
-        res.status(500).json({ message: 'Server Error' });
+        res.status(500).json({ message: 'Erreur serveur' });
     }
 };

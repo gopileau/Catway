@@ -1,1 +1,2 @@
 testUser@example.com
+mongodb+srv://vanessagonzalez99:nAF6LFlgTUcJWMtv@cluster0.ht5l6iy.mongodb.net/catways-reservation?retryWrites=true&w=majority

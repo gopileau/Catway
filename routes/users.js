@@ -5,6 +5,7 @@ const jwt = require('jsonwebtoken');
 const config = require('config');
 const User = require('../models/User');
 const auth = require('../middleware/auth');
+const mongoose = require('mongoose'); 
 
 // @route   POST api/users
 // @desc    Register a new user
@@ -50,54 +51,100 @@ router.post('/', async (req, res) => {
   }
 });
 
+router.use((req, res, next) => {
+  const token = req.headers['authorization'];
+  console.log('Token reçu:', token); // Log le token
+  // Logique de vérification du token ici
+  next();
+});
+
 // @route   PUT api/users/:id
 // @desc    Update user details
 // @access  Private
-router.put('/:id', auth, async (req, res) => {
-  const { name, email, password } = req.body;
+// Exemple de mise à jour d'un utilisateur
+router.put('/:id', async (req, res) => {
+  const userId = req.params.id;
 
-  const userFields = {};
-  if (name) userFields.name = name;
-  if (email) userFields.email = email;
-  if (password) {
-    const salt = await bcrypt.genSalt(10);
-    userFields.password = await bcrypt.hash(password, salt);
+  // Vérification de l'ID
+  if (!mongoose.Types.ObjectId.isValid(userId)) {
+      return res.status(400).json({ message: 'ID utilisateur invalide' });
   }
 
   try {
-    let user = await User.findById(req.params.id);
-
-    if (!user) return res.status(404).json({ message: 'User not found' });
-
-    user = await User.findByIdAndUpdate(
-      req.params.id,
-      { $set: userFields },
-      { new: true }
-    );
-
-    res.json(user);
-  } catch (err) {
-    console.error('Server error:', err.message);
-    res.status(500).send('Server error');
+      const user = await User.findByIdAndUpdate(userId, req.body, { new: true });
+      if (!user) return res.status(404).json({ message: 'Utilisateur non trouvé' });
+      res.json(user);
+  } catch (error) {
+      console.error('Erreur lors de la mise à jour de l\'utilisateur:', error);
+      res.status(500).send('Erreur serveur');
   }
 });
+
+
 
 // @route   DELETE api/users/:id
 // @desc    Delete a user
 // @access  Private
-router.delete('/:id', auth, async (req, res) => {
+router.delete('/:id', async (req, res) => {
+  const userId = req.params.id;
+
+  // Vérification de l'ID
+  if (!mongoose.Types.ObjectId.isValid(userId)) {
+      return res.status(400).json({ message: 'ID utilisateur invalide' });
+  }
+
   try {
+      const user = await User.findByIdAndDelete(userId);
+      if (!user) return res.status(404).json({ message: 'Utilisateur non trouvé.' });
+      res.json({ message: 'Utilisateur supprimé avec succès.' });
+  } catch (error) {
+      console.error('Erreur lors de la suppression de l\'utilisateur:', error);
+      res.status(500).json({ error: error.message });
+  }
+});
+
+
+router.patch('/:id', auth, async (req, res) => {
+  try {
+    const { name, email } = req.body; // Récupérer les données du corps de la requête
     let user = await User.findById(req.params.id);
 
     if (!user) return res.status(404).json({ message: 'User not found' });
 
-    await User.findByIdAndRemove(req.params.id);
+    // Mettre à jour les informations de l'utilisateur
+    user.name = name || user.name; // Met à jour le nom seulement s'il est fourni
+    user.email = email || user.email; // Met à jour l'email seulement s'il est fourni
+    await user.save(); // Sauvegarde les modifications
 
-    res.json({ message: 'User removed' });
+    res.json({ message: 'User updated', user });
   } catch (err) {
     console.error('Server error:', err.message);
     res.status(500).send('Server error');
   }
 });
 
+// @route   GET /users/:id/edit
+// @desc    Render the edit user form
+// @access  Private (ou Public selon tes besoins)
+router.get('/', async (req, res) => {
+  try {
+      const users = await User.find(); // Assure-toi que User est bien défini et accessible
+      res.json(users);
+  } catch (error) {
+      console.error('Erreur lors de la récupération des utilisateurs:', error); // Ajoute un log pour déboguer
+      res.status(500).json({ error: error.message });
+  }
+});
+
+
+
+router.get('/', auth, async (req, res) => { // Ajoutez auth ici
+  try {
+      const users = await User.find();
+      res.json(users);
+  } catch (error) {
+      console.error('Erreur lors de la récupération des utilisateurs:', error);
+      res.status(500).json({ error: error.message });
+  }
+});
 module.exports = router;

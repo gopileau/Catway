@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 
-const ReservationSchema = new mongoose.Schema({
-    user: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
+const reservationSchema = new mongoose.Schema({
+    user: { type: String, required: true },
     catway: { type: mongoose.Schema.Types.ObjectId, ref: 'Catway', required: true },
     clientName: { type: String, required: true },
     boatName: { type: String, required: true },
@@ -11,5 +11,4 @@ const ReservationSchema = new mongoose.Schema({
     checkOut: { type: Date, required: true }
 });
 
-module.exports = mongoose.model('Reservation', ReservationSchema);
-
+module.exports = mongoose.model('Reservation', reservationSchema);

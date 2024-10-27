@@ -12,15 +12,15 @@
     
     <!-- Formulaires pour gérer les catways -->
     <h2>Créer un Catway</h2>
-    <form id="createCatwayForm">
-        <label for="catwayNumber">Numéro du Catway:</label>
-        <input type="text" id="catwayNumber" name="catwayNumber" required>
-        <label for="type">Type:</label>
-        <input type="text" id="type" name="type" required>
-        <label for="catwayState">État:</label>
-        <input type="text" id="catwayState" name="catwayState" required>
-        <button type="submit">Créer Catway</button>
-    </form>
+<form id="createCatwayForm" action="/api/catways" method="POST">
+    <label for="catwayNumber">Numéro du Catway:</label>
+    <input type="text" id="catwayNumber" name="catwayNumber" required>
+    <label for="type">Type:</label>
+    <input type="text" id="type" name="type" required>
+    <label for="catwayState">État:</label>
+    <input type="text" id="catwayState" name="catwayState" required>
+    <button type="submit">Créer Catway</button>
+</form>
 
     <h2>Modifier un Catway</h2>
     <form id="updateCatwayForm">
@@ -38,91 +38,114 @@
           <button type="submit">Supprimer le Catway</button>
       </form>
       
-      
+      <h2>Détails d’un Catway</h2>
+<form id="viewCatwayForm">
+    <input type="text" id="catwayNumberInput" placeholder="Entrez l'ID du catway" required>
+    <button type="submit">Afficher les détails du catway</button>
+</form>
+<div id="catwayDetails"></div> <!-- Assurez-vous que cet élément existe -->
 
-    <h2>Détails d’un Catway</h2>
-    <form id="viewCatwayForm">
-        <label for="viewCatwayId">ID Catway:</label>
-        <input type="text" id="viewCatwayId" name="viewCatwayId" required>
-        <button type="submit">Voir Détails</button>
-    </form>
-    
-
-    
-    <!-- Liste des catways et réservations -->
     <h2>Liste des Catways</h2>
-<select id="catwaySelect">
-    <option value="">-- Choisissez un catway --</option>
-</select>
+    <select id="catwaySelect">
+        <option value="1">Catway 1</option>
+        <option value="2">Catway 2</option>
+        <!-- Ajoutez d'autres options ici -->
+    </select>
 
     <h2>Créer une Réservation</h2>
-    <form id="createReservationForm">
-        <label for="userId">ID Utilisateur:</label>
-        <input type="text" id="userId" name="userId" required>
-        <label for="reservationCatwayNumber">Numéro du Catway:</label>
-        <select id="reservationCatwayNumber"></select>
-        <label for="clientName">Nom du Client:</label>
-        <input type="text" id="clientName" name="clientName" required>
-        <label for="boatName">Nom du Bateau:</label>
-        <input type="text" id="boatName" name="boatName" required>
-        <label for="startTime">Heure de Début:</label>
-        <input type="datetime-local" id="startTime" name="startTime" required>
-        <label for="endTime">Heure de Fin:</label>
-        <input type="datetime-local" id="endTime" name="endTime" required>
-        <label for="checkIn">Check-In:</label>
-        <input type="date" id="checkIn" name="checkIn" required>
-        <label for="checkOut">Check-Out:</label>
-        <input type="date" id="checkOut" name="checkOut" required>
-        <button type="submit">Créer Réservation</button>
-    </form>
+    <form id="createReservationForm" onsubmit="return false;">
 
-    <h2>Supprimer une Réservation</h2>
-<form id="deleteReservationForm">
-    <label for="deleteReservationId">ID Réservation:</label>
-    <input type="text" id="deleteReservationId" name="deleteReservationId" required>
-    <button type="submit">Supprimer Réservation</button>
+    <!-- Sélecteur pour les utilisateurs -->
+    <label for="userSelect">ID Utilisateur:</label>
+    <select id="userSelect" required>
+        <option value="">Sélectionnez un Utilisateur</option>
+        <!-- Ajoute ici dynamiquement les utilisateurs -->
+    </select>
+
+    <!-- Champ pour l'ID du catway -->
+    <label for="catwayInput">ID Catway:</label>
+    <input type="text" id="catwayInput" name="catwayInput" required>
+
+    <label for="clientName">Nom du Client:</label>
+    <input type="text" id="clientName" name="clientName" required>
+
+    <label for="boatName">Nom du Bateau:</label>
+    <input type="text" id="boatName" name="boatName" required>
+
+    <label for="startTime">Heure de Début:</label>
+    <input type="datetime-local" id="startTime" name="startTime" required>
+
+    <label for="endTime">Heure de Fin:</label>
+    <input type="datetime-local" id="endTime" name="endTime" required>
+
+    <label for="checkIn">Check-In:</label>
+    <input type="date" id="checkIn" name="checkIn" required>
+
+    <label for="checkOut">Check-Out:</label>
+    <input type="date" id="checkOut" name="checkOut" required>
+
+    <button type="submit">Créer Réservation</button>
 </form>
 
+
+<h2>Supprimer une Réservation</h2>
+<form id="deleteReservationForm">
+    <label for="deleteReservationId">ID de la réservation à supprimer :</label>
+    <input type="text" id="deleteReservationId" required>
+    <button type="submit">Supprimer la réservation</button>
+</form>
+
+
+
 <h2>Détails d’une Réservation</h2>
-<form id="viewReservationForm">
-    <label for="viewReservationId">ID Réservation:</label>
-    <input type="text" id="viewReservationId" name="viewReservationId" required>
+<form id="detailsReservationForm">
+    <label for="detailsReservationId">ID Réservation:</label>
+    <input type="text" id="detailsReservationId" placeholder="Entrez l'ID de la Réservation" required>
     <button type="submit">Voir Détails</button>
 </form>
 
+<div id="reservationDetails"></div>
+
+
     <!-- Formulaires pour créer des réservations -->
     <h2>Liste des Réservations</h2>
-    <ul id="reservationList"></ul>
+    <label for="reservationSelect">Liste des Réservations:</label>
+<select id="reservationSelect"></select>
+
+
 
     <!-- Formulaires pour la gestion des utilisateurs -->
     <h2>Créer un Utilisateur</h2>
-    <form id="createUserForm">
-        <label for="userName">Nom:</label>
-        <input type="text" id="userName" name="userName" required>
-        <label for="userEmail">Email:</label>
-        <input type="email" id="userEmail" name="userEmail" required>
-        <label for="userPassword">Mot de Passe:</label>
-        <input type="password" id="userPassword" name="userPassword" required>
-        <button type="submit">Créer Utilisateur</button>
-    </form>
+<form id="createUserForm" action="/api/users" method="POST">
+    <label for="userName">Nom:</label>
+    <input type="text" id="userName" name="name" required>
+    
+    <label for="userEmail">Email:</label>
+    <input type="email" id="userEmail" name="email" required>
+    
+    <label for="userPassword">Mot de Passe:</label>
+    <input type="password" id="userPassword" name="password" required>
+    
+    <button type="submit">Créer Utilisateur</button>
+</form>
 
-    <h2>Modifier un Utilisateur</h2>
-    <form id="updateUserForm">
-        <label for="updateUserId">ID Utilisateur:</label>
-        <input type="text" id="updateUserId" name="updateUserId" required>
-        <label for="updateUserName">Nom:</label>
-        <input type="text" id="updateUserName" name="updateUserName">
-        <label for="updateUserEmail">Email:</label>
-        <input type="email" id="updateUserEmail" name="updateUserEmail">
-        <button type="submit">Modifier Utilisateur</button>
-    </form>
+
+<h2>Modifier un Utilisateur</h2>
+<form id="updateUserForm" onsubmit="updateUser(event)">
+    <label for="updateUserId">ID Utilisateur:</label>
+    <input type="text" id="updateUserId" name="updateUserId" required>
+    <label for="updateUserName">Nom:</label>
+    <input type="text" id="updateUserName" name="updateUserName">
+    <label for="updateUserEmail">Email:</label>
+    <input type="email" id="updateUserEmail" name="updateUserEmail">
+    <button type="submit">Modifier Utilisateur</button>
+</form>
 
 <h2>Supprimer un Utilisateur</h2>
-<form id="deleteUserForm">
-    <label for="deleteUserId">ID Utilisateur:</label>
-    <input type="text" id="deleteUserId" name="deleteUserId" required>
-    <button type="submit">Supprimer Utilisateur</button>
-</form>
+<label for="userIdToDelete">ID Utilisateur:</label>
+<input type="text" id="userIdToDelete" name="userIdToDelete">
+<button type="button" onclick="deleteUser()">Supprimer Utilisateur</button>
+
     <script src="js/dashboard.js"></script>
 </body>
 </html>

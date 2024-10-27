@@ -1,7 +1,9 @@
 {
   "mongoURI": "mongodb://localhost:27017/catway-reservation",
-  "jwtSecret": "G4Z@9!1p_#9j*3mK_2S%F&4lPxCyNkGy"
+  "jwtSecret": "G4Z@9!1p_#9j*3mK_2S%F&4lPxCyNkGy",
+  "refreshSecret": "rEfReShT0k3nS3cr3tK3y"  
 }
+
 
 
 

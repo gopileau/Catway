@@ -32,22 +32,27 @@ exports.getCatways = async (req, res) => {
     throw error;
   }
 };
-
-exports.getCatway = async (id) => {
+exports.getCatwayDetails = async (req, res) => {
+  console.log('ID du catway reçu :', req.params.id); // Log de l'ID reçu
   try {
-    const catway = await Catway.findById(id).select('number type state');
+    const catway = await Catway.findById(req.params.id);
+    console.log('Catway trouvé :', catway); // Log de l'objet catway trouvé
     if (!catway) {
-      throw new Error('Catway not found');
+      return res.status(200).json({
+        message: 'Catway not found',
+        id: req.params.id,
+        number: 'N/A',
+        type: 'N/A',
+        state: 'N/A'
+      });
     }
-    return {
-      catwayNumber: catway.number,
-      type: catway.type,
-      catwayState: catway.state
-    };
+    res.status(200).json(catway);
   } catch (error) {
-    throw error;
+    console.error('Erreur lors de la récupération du catway:', error);
+    res.status(500).json({ error: error.message });
   }
 };
+
 exports.createCatway = async (req, res) => {
   const { error } = catwaySchema.validate(req.body);
   if (error) return res.status(400).json({ message: error.details[0].message });
@@ -72,45 +77,30 @@ exports.createCatway = async (req, res) => {
 
 
 exports.updateCatway = async (req, res) => {
-  const catwayId = req.params.id;
-
-  if (!mongoose.Types.ObjectId.isValid(catwayId)) {
-    return res.status(400).json({ message: "Invalid Catway ID" });
-  }
+  const id = req.params.id;
+  const number = req.body.number;
+  const type = req.body.type;
+  const state = req.body.state;
 
   try {
-    const updatedCatway = await Catway.findByIdAndUpdate(catwayId, req.body, { new: true });
-    if (!updatedCatway) {
-      return res.status(404).json({ message: "Catway not found" });
-    }
-    res.status(200).json(updatedCatway);
+    const catway = await Catway.findByIdAndUpdate(id, { number, type, state }, { new: true });
+    res.send(`Catway mis à jour avec succès`);
   } catch (error) {
-    console.error('Error while updating Catway:', error);
-    res.status(500).json({ message: "An error occurred while updating the Catway" });
+    res.status(400).json({ error: error.message });
   }
 };
 
 
 exports.deleteCatway = async (req, res) => {
-  const catwayId = req.params.id;
-  if (!mongoose.Types.ObjectId.isValid(catwayId)) {
-    return res.status(400).json({ message: "Invalid Catway ID" });
-  }
+  const id = req.params.id;
 
   try {
-    const deletedCatway = await Catway.findByIdAndDelete(catwayId);
-    if (!deletedCatway) {
-      return res.status(404).json({ message: "Catway not found" });
-    }
-    res.status(200).json({ message: "Catway deleted successfully", catway: deletedCatway });
+    const deletedCatway = await Catway.findByIdAndDelete(id);
+    res.send(`Catway supprimé avec succès`);
   } catch (error) {
-    console.error('Error while deleting Catway:', error);
-    res.status(500).json({ message: "An error occurred while deleting the Catway" });
+    res.status(400).json({ error: error.message });
   }
 };
-
-
-
 
 exports.patchCatway = async (req, res) => {
   try {

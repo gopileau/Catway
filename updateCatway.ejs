@@ -1,7 +1,62 @@
-<!-- dans votre fichier views/updateCatway.ejs -->
-<form action="/api/catways/update/<%= catway._id %>" method="patch">
+<form 
+action="/api/catways/update/<%= catway._id %>" 
+method="post"> 
+  <!-- Champ caché pour spécifier la méthode PATCH -->
+    <input type="hidden" name="_method" value="patch">
     <input type="text" name="number" value="<%= catway.number %>">
     <input type="text" name="type" value="<%= catway.type %>">
     <input type="text" name="state" value="<%= catway.state %>">
     <button type="submit">Mettre à jour</button>
-  </form>
+ </form>
+ <form 
+  action="/api/catways/delete/<%= catway._id %>" 
+  method="post">
+  <!-- Champ caché pour spécifier la méthode DELETE -->
+  <input type="hidden" name="_method" value="delete">
+  <button type="submit">Supprimer</button>
+</form>
+<form 
+  action="/api/reservations/delete/<%= reservation._id %>" 
+  method="post">
+  <!-- Champ caché pour spécifier la méthode DELETE -->
+  <input type="hidden" name="_method" value="delete">
+  <button type="submit">Supprimer</button>
+</form>
+<% if (catway) { %>
+  <h1>Détails du catway</h1>
+  <p>ID : <%= catway._id %></p>
+  <p>Numéro : <%= catway.number %></p>
+  <p>Type : <%= catway.type %></p>
+  <p>État : <%= catway.state %></p>
+<% } else { %>
+  <p>Aucun catway trouvé</p>
+<% } %>
+
+<h2>Détails d’une Réservation</h2>
+<form action="/api/reservations/<%= reservation._id %>?_method=DELETE" method="POST">
+  <button type="submit">Supprimer</button>
+</form>
+
+<label for="reservationCatwayNumber">Sélectionnez un Catway :</label>
+<select id="reservationCatwayNumber">
+    <option value="">-- Choisissez un catway --</option>
+    <% catways.forEach(catway => { %>
+        <option value="<%= catway._id %>"><%= catway.number %></option>
+    <% }); %>
+</select>
+
+
+<!-- Modifier un Utilisateur -->
+<form action="/api/users/<%= user._id %>?_method=put" method="post">
+  <input type="text" name="name" value="<%= user.name %>" required>
+  <input type="text" name="email" value="<%= user.email %>" required>
+  <button type="submit">Modifier Utilisateur</button>
+</form>
+
+<form action="/api/users/<%= user._id %>?_method=delete" method="post">
+  <button type="submit">Supprimer Utilisateur</button>
+</form>
+
+
+
+
