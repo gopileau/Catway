@@ -4,7 +4,7 @@ const mongoose = require('mongoose');
 const Catway = require('../models/Catway');
 const reservationController = require('../controllers/reservationController'); 
 
-// Schéma Joi pour validation des données
+
 const reservationSchema = Joi.object({
     user: Joi.string().required(),
     catway: Joi.string().required(),
@@ -16,14 +16,13 @@ const reservationSchema = Joi.object({
     checkOut: Joi.date().iso().required()
 });
 
-// Fonction pour créer une réservation
 exports.createReservation = async (req, res) => {
     const { user, clientName, boatName, startTime, endTime, checkIn, checkOut } = req.body;
-    const { catwayId } = req.params; // Utilise l'ID du catway dans les paramètres de l'URL
+    const { catwayId } = req.params; 
 
     const newReservation = new Reservation({
-      user, // Assurez-vous que 'user' est bien défini dans le corps de la requête
-      catway: catwayId, // Utilise l'ID du catway passé dans l'URL
+      user, 
+      catway: catwayId, 
       clientName,
       boatName,
       startTime: new Date(startTime),
@@ -43,7 +42,7 @@ exports.createReservation = async (req, res) => {
 
 
 
-// Fonction pour mettre à jour une réservation
+
 exports.updateReservation = async (req, res) => {
     const { error } = reservationSchema.validate(req.body);
     if (error) return res.status(400).json({ message: error.details[0].message });
@@ -60,7 +59,7 @@ exports.updateReservation = async (req, res) => {
 
 exports.getReservationDetails = async (req, res) => {
     try {
-        const reservation = await Reservation.findById(req.params.id).populate('catway'); // Utilise populate si tu veux inclure les détails du catway
+        const reservation = await Reservation.findById(req.params.id).populate('catway'); 
         if (!reservation) {
             return res.status(404).json({ message: 'Reservation not found' });
         }
@@ -73,22 +72,17 @@ exports.getReservationDetails = async (req, res) => {
 };
 
 
-// Fonction pour supprimer une réservation
-// reservationController.js
 exports.deleteReservation = async (req, res) => {
-    const id = req.params.id; // Récupérer l'ID de réservation depuis les paramètres
-    console.log('Tentative de suppression de la réservation avec ID:', id); // Log de l'ID
-
-    // Vérifier si l'ID est valide
+    const id = req.params.id; 
+    console.log('Tentative de suppression de la réservation avec ID:', id); 
     if (!mongoose.Types.ObjectId.isValid(id)) {
         return res.status(400).json({ message: 'Invalid reservation ID' });
     }
 
     try {
-        // Supprimer la réservation par ID
+      
         const deletedReservation = await Reservation.findByIdAndDelete(id);
         
-        // Vérifier si la réservation a été trouvée et supprimée
         if (!deletedReservation) {
             return res.status(404).json({ message: 'Reservation not found' });
         }

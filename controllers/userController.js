@@ -22,11 +22,11 @@ exports.login = async (req, res) => {
         const isMatch = await bcrypt.compare(password, user.password);
         if (!isMatch) return res.status(400).json({ message: 'Invalid email or password' });
 
-        // Génération du token JWT
+       
         const token = jwt.sign({ userId: user._id }, config.get('jwtSecret'), { expiresIn: '1h' });
         console.log('Token généré:', token);
         
-        res.json({ token }); // Renvoie le token ici
+        res.json({ token }); 
     } catch (error) {
         res.status(500).json({ error: error.message });
     }
@@ -51,7 +51,6 @@ exports.refreshToken = (req, res) => {
 exports.getUserEmail = async (req, res) => {
     const userId = req.params.id;
 
-    // Vérification de l'ID
     if (!mongoose.Types.ObjectId.isValid(userId)) {
         return res.status(400).json({ message: 'ID utilisateur invalide' });
     }

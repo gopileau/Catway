@@ -13,7 +13,7 @@ const {
     updateCatway,
     patchCatway,
     deleteCatway
-} = require('../controllers/catwayController');  // Import unique
+} = require('../controllers/catwayController');  
 
 // Route pour obtenir tous les catways
 router.get('/', async (req, res) => {

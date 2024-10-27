@@ -15,5 +15,4 @@ UserSchema.pre('save', async function(next) {
   next();
 });
 
-// Vérifiez si le modèle existe déjà
 module.exports = mongoose.models.User || mongoose.model('User', UserSchema);

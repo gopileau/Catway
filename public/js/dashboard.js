@@ -2,22 +2,22 @@ if (!localStorage.getItem('token')) {
     window.location.href = 'index.html';
 }
 
-// Fonction pour charger les catways depuis l'API et les ajouter à la liste déroulante
+
 async function loadCatways() {
   try {
-    const response = await fetch('/api/catways'); // Remplacez par l'URL correcte de votre API
+    const response = await fetch('/api/catways'); 
     if (!response.ok) throw new Error('Erreur lors de la récupération des catways');
 
     const catways = await response.json();
-    console.log('Catways récupérés:', catways); // Vérifiez les données récupérées
+    console.log('Catways récupérés:', catways);
 
     const select = document.getElementById('catwaySelect');
-    select.innerHTML = '<option value="">Sélectionnez un Catway</option>'; // Réinitialise la liste
+    select.innerHTML = '<option value="">Sélectionnez un Catway</option>'; 
 
     catways.forEach(catway => {
       const option = document.createElement('option');
-      option.value = catway._id; // Assurez-vous que _id est la clé correcte
-      option.textContent = `Catway ${catway.number || 'N/A'}`; // Affiche le numéro du catway ou 'N/A'
+      option.value = catway._id; 
+      option.textContent = `Catway ${catway.number || 'N/A'}`; 
       select.appendChild(option);
     });
   } catch (error) {
@@ -26,9 +26,9 @@ async function loadCatways() {
   }
 }
 document.addEventListener('DOMContentLoaded', () => {
-  loadCatways(); // Charge les catways lorsque la page est prête
+  loadCatways(); 
 });
-// Assurez-vous que cette fonction est appelée après le chargement du DOM
+
 
 
 async function loadReservations() {
@@ -37,12 +37,12 @@ async function loadReservations() {
     const reservations = await response.json();
     console.log('Réservations:', reservations);
 
-    const reservationSelect = document.getElementById('reservationSelect'); // Assurez-vous d'avoir un élément select pour les réservations
-    reservationSelect.innerHTML = ''; // Réinitialiser les options avant d'ajouter de nouvelles
+    const reservationSelect = document.getElementById('reservationSelect'); 
+    reservationSelect.innerHTML = ''; 
     reservations.forEach(reservation => {
       const option = document.createElement('option');
-      option.value = reservation._id; // Utiliser l'ID de la réservation
-      option.text = `Réservation ${reservation.num} - ID: ${reservation._id}`; // Afficher le numéro et l'ID de la réservation
+      option.value = reservation._id; 
+      option.text = `Réservation ${reservation.num} - ID: ${reservation._id}`;
       reservationSelect.appendChild(option);
     });
   } catch (error) {
@@ -51,19 +51,19 @@ async function loadReservations() {
 }
 
 loadReservations();
-// Fonction pour charger les utilisateurs depuis l'API et les ajouter à la liste déroulante
+
 async function loadUsers() {
   try {
-    const response = await fetch('/api/users'); // Remplace par l'URL correcte de ton API
+    const response = await fetch('/api/users'); 
     const users = await response.json();
 
-    const userSelect = document.getElementById('userSelect'); // Assurez-vous d'avoir un élément select pour les utilisateurs
-    userSelect.innerHTML = '<option value="">Sélectionnez un Utilisateur</option>'; // Réinitialise la liste
+    const userSelect = document.getElementById('userSelect');
+    userSelect.innerHTML = '<option value="">Sélectionnez un Utilisateur</option>';
 
     users.forEach(user => {
       const option = document.createElement('option');
-      option.value = user._id; // Assurez-vous que _id est la clé correcte
-      option.textContent = user.name; // Affiche le nom de l'utilisateur
+      option.value = user._id; 
+      option.textContent = user.name; 
       userSelect.appendChild(option);
     });
   } catch (error) {
@@ -72,22 +72,21 @@ async function loadUsers() {
   }
 }
 
-// Appel de la fonction pour charger les utilisateurs lorsque la page est prête
+
 document.addEventListener('DOMContentLoaded', loadUsers);
 
 
-// Définir la fonction fetchCatways
 async function fetchCatways() {
   try {
     const response = await fetch('/api/catways');
     if (!response.ok) throw new Error('Erreur lors de la récupération des catways');
 
     const catways = await response.json();
-    const catwayList = document.getElementById('catwayList') || document.createElement('ul'); // Utilise une liste non ordonnée
+    const catwayList = document.getElementById('catwayList') || document.createElement('ul'); 
     catwayList.id = 'catwayList';
     
-    // Vider la liste avant d'ajouter les nouveaux éléments
-    catwayList.innerHTML = ''; // Efface le contenu précédent
+ 
+    catwayList.innerHTML = '';
 
     catways.forEach(catway => {
       const listItem = document.createElement('li');
@@ -95,8 +94,6 @@ async function fetchCatways() {
       catwayList.appendChild(listItem);
     });
 
-    // Si tu ne veux pas afficher la liste à la fin, décommente la ligne ci-dessous
-    // catwayList.style.display = 'none'; // Masque la liste
   } catch (error) {
     console.error('Erreur :', error);
     alert('Erreur lors de la récupération des catways');
@@ -104,7 +101,6 @@ async function fetchCatways() {
 }
 
 
-// Appeler la fonction fetchCatways lorsque le DOM est complètement chargé
 document.addEventListener('DOMContentLoaded', () => {
   document.getElementById('viewCatwayForm').addEventListener('submit', async (event) => {
       event.preventDefault();
@@ -118,9 +114,9 @@ document.addEventListener('DOMContentLoaded', () => {
       }
 
       try {
-          // Utilisation d'un timestamp pour éviter le cache
+    
           const response = await fetch(`/api/catways/${catwayId}?_=${new Date().getTime()}`);
-          const text = await response.text(); // Récupère la réponse brute pour la journaliser
+          const text = await response.text(); 
           console.log('Réponse brute de l\'API:', text);
           
           if (!response.ok) {
@@ -130,7 +126,7 @@ document.addEventListener('DOMContentLoaded', () => {
           const catway = JSON.parse(text);
           console.log('Détails du Catway (objet):', catway);
 
-          // Vérifie si l'objet contient les champs nécessaires
+       
           if (catway && catway.id && catway.number && catway.type && catway.state) {
               document.getElementById('catwayDetails').innerHTML = `
                   <h3>Détails du Catway</h3>
@@ -170,14 +166,14 @@ async function fetchReservations() {
     const responseCatways = await fetch('/api/catways');
     const catways = await responseCatways.json();
 
-    // Assurez-vous que l'élément avec l'ID 'reservationList' existe
+    
     const reservationList = document.getElementById('reservationList');
     if (!reservationList) {
       console.error('Element with ID "reservationList" not found');
       return;
     }
     
-    reservationList.innerHTML = ''; // Clear previous content
+    reservationList.innerHTML = ''; 
 
     reservations.forEach(reservation => {
       const listItem = document.createElement('li');
@@ -205,7 +201,7 @@ async function fetchReservations() {
     catways.forEach(catway => {
       const option = document.createElement('option');
       option.value = catway._id;
-      option.text = catway.catwayNumber; // Afficher uniquement le numéro
+      option.text = catway.catwayNumber; 
       catwaySelect.appendChild(option);
     });
 
@@ -225,11 +221,11 @@ fetchReservations();
         if (!response.ok) {
             const errorData = await response.json();
             alert(errorData.message);
-            return; // Sortir de la fonction si la réservation n'est pas trouvée
+            return; 
         }
 
         const reservation = await response.json();
-        // Vérifie si l'objet contient les champs nécessaires
+     
         document.getElementById('reservationDetails').innerHTML = `
             <h3>Détails de la Réservation</h3>
             <p>ID: ${reservation._id || 'N/A'}</p>
@@ -247,7 +243,7 @@ fetchReservations();
     }
 }
 
-// Écouteur d'événements pour le formulaire de détails de réservation
+
 document.getElementById('detailsReservationForm').addEventListener('submit', (event) => {
     event.preventDefault();
     const reservationId = document.getElementById('detailsReservationId').value.trim();
@@ -255,12 +251,12 @@ document.getElementById('detailsReservationForm').addEventListener('submit', (ev
 });
 
 async function fetchUsers() {
-  const token = localStorage.getItem('accessToken'); // Récupérer le token
+  const token = localStorage.getItem('accessToken'); 
 
   const response = await fetch('/api/users', {
     method: 'GET',
     headers: {
-      'Authorization': `Bearer ${token}`, // Ajouter le token ici
+      'Authorization': `Bearer ${token}`, 
     },
   });
 
@@ -272,29 +268,25 @@ async function fetchUsers() {
   }
 }
 
-// dashboard.js (ou un fichier similaire où vous récupérez des données utilisateur)
-// dashboard.js
-
 document.addEventListener('DOMContentLoaded', async () => {
-  const token = localStorage.getItem('token'); // Récupérez le token depuis le stockage local
+  const token = localStorage.getItem('token'); 
 
   try {
     const response = await fetch('/api/users', {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${token}` // Ajoutez le token ici
+        'Authorization': `Bearer ${token}` 
       }
     });
 
     if (response.ok) {
       const users = await response.json();
-      console.log(users); // Traitez la réponse des utilisateurs ici
-      // Par exemple, affichez les utilisateurs dans une liste
+      console.log(users);
     } else {
       const error = await response.json();
       console.error('Erreur lors de la récupération des utilisateurs:', error.message);
-      // Affichez un message d'erreur à l'utilisateur
+     
     }
   } catch (error) {
     console.error('Erreur de connexion:', error);
@@ -303,7 +295,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
 
 async function updateUser(event) {
-  event.preventDefault(); // Empêche le rechargement de la page
+  event.preventDefault(); 
   const userId = document.getElementById('updateUserId').value;
   const userName = document.getElementById('updateUserName').value;
   const userEmail = document.getElementById('updateUserEmail').value;
@@ -313,22 +305,22 @@ async function updateUser(event) {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${localStorage.getItem('token')}` // Assurez-vous d'ajouter le token
+        'Authorization': `Bearer ${localStorage.getItem('token')}`
       },
-      body: JSON.stringify({ name: userName, email: userEmail }) // Corps de la requête
+      body: JSON.stringify({ name: userName, email: userEmail }) 
     });
 
     if (!response.ok) throw new Error('Erreur lors de la mise à jour de l’utilisateur');
 
     const data = await response.json();
-    alert(data.message); // Affiche le message de succès
+    alert(data.message); 
   } catch (error) {
     console.error(error);
     alert('Impossible de mettre à jour l’utilisateur. Veuillez réessayer.');
   }
 }
 
-// Lier cette fonction au formulaire
+
 document.getElementById('updateUserForm').addEventListener('submit', updateUser);
 
 async function deleteUser() {
@@ -339,7 +331,6 @@ async function deleteUser() {
     return;
   }
 
-  // Récupérer le token d'accès du stockage local
   let accessToken = localStorage.getItem('accessToken');
 
   try {
@@ -351,10 +342,10 @@ async function deleteUser() {
     });
 
     if (response.status === 401) {
-      // Token expiré, essayer de le renouveler
-      accessToken = await refreshToken(); // Appel de la fonction de renouvellement
+ 
+      accessToken = await refreshToken(); 
       if (accessToken) {
-        // Réessayez de supprimer l'utilisateur après le renouvellement du token
+       
         const retryResponse = await fetch(`/api/users/${userId}`, {
           method: 'DELETE',
           headers: {
@@ -401,7 +392,7 @@ async function refreshToken() {
 
     if (response.ok) {
       const data = await response.json();
-      localStorage.setItem('accessToken', data.accessToken); // Mettez à jour le token
+      localStorage.setItem('accessToken', data.accessToken); 
       return data.accessToken;
     } else {
       throw new Error('Unable to refresh token');
@@ -459,7 +450,7 @@ async function populateCatwaySelect() {
     const response = await fetch('/api/catways');
     const catways = await response.json();
 
-    const catwaySelect = document.getElementById('catwayInput'); // Assurez-vous que cet élément existe dans votre HTML
+    const catwaySelect = document.getElementById('catwayInput'); 
     if (!catwaySelect) {
       console.error('Element with ID "catwayInput" not found');
       return;
@@ -467,8 +458,8 @@ async function populateCatwaySelect() {
 
     catways.forEach(catway => {
       const option = document.createElement('option');
-      option.value = catway._id; // ou autre attribut pertinent
-      option.textContent = catway.name; // ou autre attribut pertinent
+      option.value = catway._id; 
+      option.textContent = catway.name; 
       catwaySelect.appendChild(option);
     });
   } catch (error) {
@@ -478,7 +469,7 @@ async function populateCatwaySelect() {
 
 
 document.addEventListener('DOMContentLoaded', () => {
-  populateCatwaySelect(); // Appelle la fonction au chargement du DOM
+  populateCatwaySelect(); 
 });
 
 
@@ -486,9 +477,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const form = document.getElementById('createReservationForm');
   if (form) {
       form.addEventListener('submit', async function(event) {
-          event.preventDefault(); // Empêche le rechargement de la page
-
-          // Récupération des valeurs du formulaire
+          event.preventDefault(); 
           const userId = document.getElementById('userSelect').value;
           const catwayNumber = document.getElementById('catwayInput').value;
 
@@ -514,14 +503,14 @@ document.addEventListener('DOMContentLoaded', () => {
               checkOut
           };
 
-          console.log('Données de réservation:', reservationData); // Affiche les données avant l'envoi
+          console.log('Données de réservation:', reservationData);
 
           try {
               const response = await fetch(`/api/catways/${catwayNumber}/reservations`, {
                   method: 'POST',
                   headers: {
                       'Content-Type': 'application/json',
-                      'Authorization': `Bearer ${localStorage.getItem('token')}` // Ajoutez l'en-tête d'autorisation
+                      'Authorization': `Bearer ${localStorage.getItem('token')}`
                   },
                   body: JSON.stringify(reservationData)
               });
@@ -530,7 +519,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
               if (response.ok) {
                   alert('Réservation créée avec succès !');
-                  // Optionnel: rechargez les réservations ou effectuez d'autres actions ici
+                 
               } else {
                   console.error('Erreur de création de réservation:', result);
                   alert('Erreur: ' + result.message);
@@ -547,9 +536,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
 // Supprimer Réservation
 document.getElementById('deleteReservationForm').addEventListener('submit', async (event) => {
-  event.preventDefault(); // Empêche le rechargement de la page
+  event.preventDefault(); 
 
-  const reservationId = document.getElementById('deleteReservationId').value.trim(); // Récupère l'ID de la réservation
+  const reservationId = document.getElementById('deleteReservationId').value.trim(); 
 
   try {
       const response = await fetch(`/api/reservations/${reservationId}`, {
@@ -561,15 +550,15 @@ document.getElementById('deleteReservationForm').addEventListener('submit', asyn
     
 
       if (response.ok) {
-          alert('Réservation supprimée avec succès'); // Alerte si la suppression réussie
-          fetchReservations(); // Récupère à nouveau la liste des réservations si nécessaire
+          alert('Réservation supprimée avec succès');ie
+          fetchReservations(); 
       } else {
           const errorData = await response.json();
-          alert(`Erreur: ${errorData.message}`); // Affiche un message d'erreur si la suppression échoue
+          alert(`Erreur: ${errorData.message}`); 
       }
   } catch (error) {
-      console.error('Erreur lors de la suppression de la réservation:', error); // Journalise les erreurs
-      alert('Erreur lors de la suppression de la réservation.'); // Alerte d'erreur
+      console.error('Erreur lors de la suppression de la réservation:', error);
+      alert('Erreur lors de la suppression de la réservation.'); 
   }
 });
 
@@ -579,7 +568,7 @@ const updateCatwayForm = document.getElementById('updateCatwayForm');
 
 updateCatwayForm.addEventListener('submit', async (e) => {
   e.preventDefault();
-  const updateCatwayId = document.getElementById('updateCatwayId').value.trim(); // Supprimer les espaces
+  const updateCatwayId = document.getElementById('updateCatwayId').value.trim();
   const updateCatwayStatus = document.getElementById('updateCatwayStatus').value;
 
   try {
@@ -606,7 +595,7 @@ const deleteCatwayForm = document.getElementById('deleteCatwayForm');
 
 deleteCatwayForm.addEventListener('submit', async (e) => {
   e.preventDefault();
-  const deleteCatwayId = document.getElementById('deleteCatwayId').value.trim(); // Supprimer les espaces
+  const deleteCatwayId = document.getElementById('deleteCatwayId').value.trim();
 
   try {
     const response = await fetch(`/api/catways/${deleteCatwayId}`, {
@@ -634,11 +623,11 @@ document.getElementById('viewCatwayForm').addEventListener('submit', async (even
       if (!response.ok) {
           const errorData = await response.json();
           alert(errorData.message);
-          return; // Sortir de la fonction si le catway n'est pas trouvé
+          return; 
       }
 
       const catway = await response.json();
-      // Vérifie si l'objet contient les champs nécessaires
+     
       document.getElementById('catwayDetails').innerHTML = `
           <h3>Détails du Catway</h3>
           <p>ID: ${catway.id || 'N/A'}</p>

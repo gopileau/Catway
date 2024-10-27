@@ -1,7 +1,7 @@
-// Code pour stocker l'ID du catway dans localStorage
+
 localStorage.setItem('catwayId', '66d9beab579f91f9f19b988E');
 
-// Code pour récupérer les détails du catway à partir de l'API
+
 document.addEventListener('DOMContentLoaded', async () => {
     const catwayId = localStorage.getItem('catwayId');
     console.log(catwayId);
@@ -19,7 +19,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             }
         });
         const catway = await response.json();
-        console.log(catway); // Ajoutez cette ligne pour afficher la réponse de l'API
+        console.log(catway); 
         if (catway) {
             const catwayDetails = document.getElementById('catwayDetails');
             catwayDetails.innerHTML = `

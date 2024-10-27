@@ -54,7 +54,6 @@ router.post('/', async (req, res) => {
 router.use((req, res, next) => {
   const token = req.headers['authorization'];
   console.log('Token reçu:', token); // Log le token
-  // Logique de vérification du token ici
   next();
 });
 
@@ -88,7 +87,6 @@ router.put('/:id', async (req, res) => {
 router.delete('/:id', async (req, res) => {
   const userId = req.params.id;
 
-  // Vérification de l'ID
   if (!mongoose.Types.ObjectId.isValid(userId)) {
       return res.status(400).json({ message: 'ID utilisateur invalide' });
   }
@@ -106,15 +104,15 @@ router.delete('/:id', async (req, res) => {
 
 router.patch('/:id', auth, async (req, res) => {
   try {
-    const { name, email } = req.body; // Récupérer les données du corps de la requête
+    const { name, email } = req.body; 
     let user = await User.findById(req.params.id);
 
     if (!user) return res.status(404).json({ message: 'User not found' });
 
     // Mettre à jour les informations de l'utilisateur
-    user.name = name || user.name; // Met à jour le nom seulement s'il est fourni
-    user.email = email || user.email; // Met à jour l'email seulement s'il est fourni
-    await user.save(); // Sauvegarde les modifications
+    user.name = name || user.name; 
+    user.email = email || user.email; 
+    await user.save(); 
 
     res.json({ message: 'User updated', user });
   } catch (err) {
@@ -128,17 +126,17 @@ router.patch('/:id', auth, async (req, res) => {
 // @access  Private (ou Public selon tes besoins)
 router.get('/', async (req, res) => {
   try {
-      const users = await User.find(); // Assure-toi que User est bien défini et accessible
+      const users = await User.find(); 
       res.json(users);
   } catch (error) {
-      console.error('Erreur lors de la récupération des utilisateurs:', error); // Ajoute un log pour déboguer
+      console.error('Erreur lors de la récupération des utilisateurs:', error); 
       res.status(500).json({ error: error.message });
   }
 });
 
 
 
-router.get('/', auth, async (req, res) => { // Ajoutez auth ici
+router.get('/', auth, async (req, res) => { 
   try {
       const users = await User.find();
       res.json(users);

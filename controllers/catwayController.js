@@ -22,7 +22,7 @@ const catwaySchema = Joi.object({
 exports.getCatways = async (req, res) => {
   try {
     const catways = await Catway.find().select('number type state');
-    console.log(catways); // Ajouter cette ligne de code
+    console.log(catways);
     return catways.map(catway => ({
       catwayNumber: catway.number ? catway.number.toString() : 'N/A',
       type: catway.type,
@@ -33,10 +33,10 @@ exports.getCatways = async (req, res) => {
   }
 };
 exports.getCatwayDetails = async (req, res) => {
-  console.log('ID du catway reçu :', req.params.id); // Log de l'ID reçu
+  console.log('ID du catway reçu :', req.params.id); 
   try {
     const catway = await Catway.findById(req.params.id);
-    console.log('Catway trouvé :', catway); // Log de l'objet catway trouvé
+    console.log('Catway trouvé :', catway); 
     if (!catway) {
       return res.status(200).json({
         message: 'Catway not found',
