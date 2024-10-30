@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>API Documentation</title>
+</head>
+<body>
+    <h1>API Documentation</h1>
+    <p>Welcome to the Russell Marina Reservation Management API documentation. This API allows you to manage catways and reservations efficiently.</p>
+    
+    <h2>Tutorial</h2>
+    <p>To use the API, you can make HTTP requests to the endpoints listed below. Ensure you have the necessary permissions for each action.</p>
+
+    <h2>Catways</h2>
+    <h3>List All Catways</h3>
+    <pre>
+    GET /catways
+    </pre>
+    <h3>Get a Specific Catway</h3>
+    <pre>
+    GET /catways/:id
+    </pre>
+    <h3>Create a New Catway</h3>
+    <pre>
+    POST /catways
+    {
+        "name": "Catway 1",
+        "location": "Paris"
+    }
+    </pre>
+    <h4>Response</h4>
+    <pre>
+    {
+        "id": "1",
+        "name": "Catway 1",
+        "location": "Paris"
+    }
+    </pre>
+    <h3>Update a Specific Catway</h3>
+    <pre>
+    PUT /catways/:id
+    {
+        "name": "Updated Catway",
+        "location": "Updated Location"
+    }
+    </pre>
+    <h3>Delete a Specific Catway</h3>
+    <pre>
+    DELETE /catways/:id
+    </pre>
+
+    <h2>Reservations</h2>
+    <h3>List All Reservations for a Specific Catway</h3>
+    <pre>
+    GET /catways/:id/reservations
+    </pre>
+    <h3>Create a New Reservation for a Specific Catway</h3>
+    <pre>
+    POST /catways/:id/reservations
+    {
+        "userId": "123",
+        "date": "2024-10-01"
+    }
+    </pre>
+    <h4>Response</h4>
+    <pre>
+    {
+        "id": "456",
+        "catwayId": "1",
+        "userId": "123",
+        "date": "2024-10-01"
+    }
+    </pre>
+    <h3>Delete a Specific Reservation</h3>
+    <pre>
+    DELETE /catways/:id/reservations/:idReservation
+    </pre>
+
+    <h2>Glossary</h2>
+    <ul>
+        <li><strong>Catway:</strong> A type of boat dock.</li>
+        <li><strong>Reservation:</strong> A booking for a specific catway.</li>
+    </ul>
+</body>
+</html>
+
+

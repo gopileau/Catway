@@ -1,0 +1,130 @@
+const User = require('../models/User');
+const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
+const mongoose = require('mongoose');
+const Joi = require('joi');
+
+const userSchema = Joi.object({
+    username: Joi.string().optional(),
+    email: Joi.string().email().optional(),
+    password: Joi.string().optional(),
+    // Ajoutez d'autres champs selon votre modèle d'utilisateur
+});
+
+/**
+ * Enregistre un nouvel utilisateur.
+ * @param {Object} req - La requête contenant les données de l'utilisateur.
+ * @param {Object} res - La réponse à envoyer au client.
+ * @returns {Object} Message de confirmation de la création de l'utilisateur.
+ */
+exports.register = async (req, res) => {
+    const { name, email, password } = req.body;
+    try {
+        const user = new User({ name, email, password });
+        await user.save();
+        res.status(201).json({ message: 'User  created successfully' });
+    } catch (error) {
+        res.status(400).json({ error: error.message });
+    }
+};
+
+/**
+ * Authentifie un utilisateur et génère un token JWT.
+ * @param {Object} req - La requête contenant les informations d'identification de l'utilisateur.
+ * @param {Object} res - La réponse à envoyer au client.
+ * @returns {Object} Token JWT pour l'utilisateur authentifié.
+ */
+exports.login = async (req, res) => {
+    const { email, password } = req.body;
+    try {
+        const user = await User.findOne({ email });
+        if (!user) return res.status(400).json({ message: 'Invalid email or password' });
+
+        const isMatch = await bcrypt.compare(password, user.password);
+        if (!isMatch) return res.status(400).json({ message: 'Invalid email or password' });
+
+        const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, { expiresIn: '1h' });
+        console.log('Token généré:', token);
+        
+        res.json({ token }); 
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+};
+
+/**
+ * Rafraîchit le token JWT à l'aide d'un refresh token.
+ * @param {Object} req - La requête contenant le refresh token.
+ * @param {Object} res - La réponse à envoyer au client.
+ * @returns {Object} Nouveau token JWT.
+ */
+exports.refreshToken = (req, res) => {
+    const refreshToken = req.body.refreshToken;
+    if (!refreshToken) {
+        return res.status(401).json({ message: 'Refresh token required' });
+    }
+    try {
+        const decoded = jwt.verify(refreshToken, process.env.REFRESH_SECRET);
+        const newToken = jwt.sign({ userId: decoded.userId }, process.env.JWT_SECRET, { expiresIn: '1h' });
+        res.json({ token: newToken });
+    } catch (error) {
+        res.status(403).json({ message: 'Invalid refresh token' });
+    }
+};
+
+/**
+ * Récupère l'email d'un utilisateur par son ID.
+ * @param {Object} req - La requête contenant l'ID de l'utilisateur.
+ * @param {Object} res - La réponse à envoyer au client.
+ * @returns {Object} Email de l'utilisateur.
+ */
+exports.getUserEmail = async (req, res) => {
+    const userId = req.params.id;
+
+    if (!mongoose.Types.ObjectId.isValid(userId)) {
+        return res.status(400).json({ message: 'ID utilisateur invalide' });
+    }
+
+    try {
+        const user = await User.findById(userId);
+        if (!user) return res.status(404).json({ message: 'Utilisateur non trouvé' });
+        res.json({ email: user.email });
+    } catch (err) {
+        console.error(err.message);
+        res.status(500).json({ message: 'Erreur serveur' });
+    }
+};
+
+/**
+ * Met à jour un utilisateur par ID.
+ * @async
+ * @function updateUser 
+ * @param {Object} req - Objet de requête Express.
+ * @param {Object} res - Objet de réponse Express.
+ */
+exports.updateUser  = async (req, res) => {
+    const userId = req.params.id;
+
+    // Valider les données entrantes
+    const { error } = userSchema.validate(req.body);
+    if (error) return res.status(400).json({ message: error.details[0].message });
+
+    try {
+        // Récupérer l'utilisateur par ID et mettre à jour avec les données de req.body
+        const updatedUser  = await User.findByIdAndUpdate(userId, req.body, { new: true });
+        
+        if (!updatedUser ) {
+            return res.status(404).json({ message: 'Utilisateur non trouvé' });
+        }
+
+        // Réponse avec un message de succès et l'utilisateur mis à jour
+        res.status(200).json({ 
+            message: 'Utilisateur mis à jour avec succès', 
+            userId: updatedUser ._id, // ID de l'utilisateur mis à jour
+            updatedUser  
+        });
+    } catch (error) {
+        console.error('Erreur lors de la mise à jour de l\'utilisateur:', error);
+        res.status(500).json({ error: error.message });
+    }
+};

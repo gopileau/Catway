@@ -418,31 +418,32 @@ if (element) {
 }
 // Créer Catway
 document.getElementById('createCatwayForm').addEventListener('submit', async (event) => {
-    event.preventDefault();
-    const catwayNumber = document.getElementById('catwayNumber').value;
-    const type = document.getElementById('type').value;
-    const catwayState = document.getElementById('catwayState').value;
+  event.preventDefault();
+  const catwayNumber = document.getElementById('catwayNumber').value;
+  const type = document.getElementById('type').value;
+  const catwayState = document.getElementById('catwayState').value;
 
-    try {
-        const response = await fetch('/api/catways', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${localStorage.getItem('token')}`
-            },
-            body: JSON.stringify({ catwayNumber, type, catwayState })
-        });
-    
-        if (response.ok) {
-            alert('Catway created successfully');
-            fetchCatways();
-        } else {
-            const errorData = await response.json();
-            alert(errorData.message);
-        }
-    } catch (error) {
-        console.error('Error:', error);
-    }
+  try {
+      const response = await fetch('/api/catways', {
+          method: 'POST',
+          headers: {
+              'Content-Type': 'application/json',
+              'Authorization': `Bearer ${localStorage.getItem('token')}`
+          },
+          body: JSON.stringify({ catwayNumber, type, catwayState })
+      });
+  
+      if (response.ok) {
+          const data = await response.json(); // Récupérer la réponse JSON
+          alert(`Catway created successfully with ID: ${data.id}`); // Afficher l'ID dans une alerte
+          fetchCatways(); // Appeler la fonction pour rafraîchir la liste des Catways
+      } else {
+          const errorData = await response.json();
+          alert(errorData.message);
+      }
+  } catch (error) {
+      console.error('Error:', error);
+  }
 });
 
 async function populateCatwaySelect() {
@@ -503,8 +504,6 @@ document.addEventListener('DOMContentLoaded', () => {
               checkOut
           };
 
-          console.log('Données de réservation:', reservationData);
-
           try {
               const response = await fetch(`/api/catways/${catwayNumber}/reservations`, {
                   method: 'POST',
@@ -518,11 +517,9 @@ document.addEventListener('DOMContentLoaded', () => {
               const result = await response.json();
 
               if (response.ok) {
-                  alert('Réservation créée avec succès !');
-                 
+                  alert(result.message); // Affiche le message de succès
               } else {
-                  console.error('Erreur de création de réservation:', result);
-                  alert('Erreur: ' + result.message);
+                  alert('Erreur: ' + result.error || 'Une erreur est survenue.');
               }
           } catch (error) {
               console.error('Erreur lors de la requête:', error);
@@ -533,7 +530,6 @@ document.addEventListener('DOMContentLoaded', () => {
       console.error("Le formulaire 'createReservationForm' n'a pas été trouvé.");
   }
 });
-
 // Supprimer Réservation
 document.getElementById('deleteReservationForm').addEventListener('submit', async (event) => {
   event.preventDefault(); 
@@ -642,6 +638,7 @@ document.getElementById('viewCatwayForm').addEventListener('submit', async (even
 });
 
 // Créer Utilisateur
+// Créer Utilisateur
 document.getElementById('createUserForm').addEventListener('submit', async (event) => {
   event.preventDefault();
   const userName = document.getElementById('userName').value;
@@ -659,7 +656,8 @@ document.getElementById('createUserForm').addEventListener('submit', async (even
       });
 
       if (response.ok) {
-          alert('User created successfully');
+          const data = await response.json(); // Récupérer la réponse JSON
+          alert(`Utilisateur créé avec succès avec l'ID: ${data.userId}`); // Afficher l'ID dans une alerte
       } else {
           const errorData = await response.json();
           alert(errorData.message);
@@ -668,14 +666,12 @@ document.getElementById('createUserForm').addEventListener('submit', async (even
       console.error('Error:', error);
   }
 });
-
-
 // Modifier Utilisateur
 document.getElementById('updateUserForm').addEventListener('submit', async (event) => {
   event.preventDefault();
-  const userId = document.getElementById('updateUserId').value;
-  const userName = document.getElementById('updateUserName').value;
-  const userEmail = document.getElementById('updateUserEmail').value;
+  const userId = document.getElementById('updateUser Id').value;
+  const userName = document.getElementById('updateUser Name').value;
+  const userEmail = document.getElementById('updateUser Email').value;
 
   try {
       const response = await fetch(`/api/users/${userId}`, {
@@ -688,7 +684,8 @@ document.getElementById('updateUserForm').addEventListener('submit', async (even
       });
 
       if (response.ok) {
-          alert('User modified successfully');
+          const data = await response.json();
+          alert(`Utilisateur mis à jour avec succès avec l'ID: ${data.userId}`); // Afficher l'ID dans une alerte
       } else {
           const errorData = await response.json();
           alert(errorData.message);
@@ -699,9 +696,10 @@ document.getElementById('updateUserForm').addEventListener('submit', async (even
 });
 
 // Supprimer Utilisateur
+// Supprimer Utilisateur
 document.getElementById('deleteUserForm').addEventListener('submit', async (event) => {
   event.preventDefault();
-  const userId = document.getElementById('deleteUserId').value;
+  const userId = document.getElementById('deleteUser Id').value;
 
   try {
       const response = await fetch(`/api/users/${userId}`, {
@@ -712,7 +710,8 @@ document.getElementById('deleteUserForm').addEventListener('submit', async (even
       });
 
       if (response.ok) {
-          alert('User deleted successfully');
+          const data = await response.json();
+          alert(`Utilisateur supprimé avec succès avec l'ID: ${data.userId}`); // Afficher l'ID dans une alerte
       } else {
           const errorData = await response.json();
           alert(errorData.message);

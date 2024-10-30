@@ -11,46 +11,20 @@ const mongoose = require('mongoose');
 // @desc    Register a new user
 // @access  Public
 router.post('/', async (req, res) => {
-  const { name, email, password } = req.body;
-
   try {
-    let user = await User.findOne({ email });
-    if (user) {
-      return res.status(400).json({ message: 'User already exists' });
-    }
+      const newUser  = new User(req.body);
+      const savedUser  = await newUser .save();
 
-    user = new User({
-      name,
-      email,
-      password
-    });
-
-    const salt = await bcrypt.genSalt(10);
-    user.password = await bcrypt.hash(password, salt);
-
-    await user.save();
-
-    const payload = {
-      user: {
-        id: user.id
-      }
-    };
-
-    jwt.sign(
-      payload,
-      config.get('jwtSecret'),
-      { expiresIn: 3600 },
-      (err, token) => {
-        if (err) throw err;
-        res.json({ token });
-      }
-    );
-  } catch (err) {
-    console.error('Server error:', err.message);
-    res.status(500).send('Server error');
+      // Renvoie l'ID de l'utilisateur créé
+      res.status(201).json({
+          message: 'Utilisateur créé avec succès',
+          userId: savedUser ._id // Renvoie l'ID de l'utilisateur créé
+      });
+  } catch (error) {
+      console.error('Erreur lors de la création de l\'utilisateur:', error);
+      res.status(500).json({ message: 'Erreur serveur' });
   }
 });
-
 router.use((req, res, next) => {
   const token = req.headers['authorization'];
   console.log('Token reçu:', token); // Log le token
@@ -69,10 +43,15 @@ router.put('/:id', async (req, res) => {
       return res.status(400).json({ message: 'ID utilisateur invalide' });
   }
 
+  // Optionnel : Validation des données d'entrée
+  // const { error } = userSchema.validate(req.body);
+  // if (error) return res.status(400).json({ message: error.details[0].message });
+
   try {
       const user = await User.findByIdAndUpdate(userId, req.body, { new: true });
       if (!user) return res.status(404).json({ message: 'Utilisateur non trouvé' });
-      res.json(user);
+      
+      res.status(200).json({ message: 'Utilisateur mis à jour avec succès', user });
   } catch (error) {
       console.error('Erreur lors de la mise à jour de l\'utilisateur:', error);
       res.status(500).send('Erreur serveur');

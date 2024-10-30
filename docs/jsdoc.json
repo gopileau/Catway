@@ -1,0 +1,22 @@
+{
+    "tags": {
+      "allowUnknownTags": true
+    },
+    "source": {
+      "include": ["services", "routes"], 
+      "exclude": ["node_modules"],
+      "includePattern": ".+\\.js$",
+      "excludePattern": "(^|\\/|\\\\)_"
+    },
+    "opts": {
+      "destination": "./docs", 
+      "recurse": true
+    },
+    "templates": {
+      "default": {
+        "includeDate": false
+      }
+    }
+}
+
+  

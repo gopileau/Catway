@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 
 const reservationSchema = new mongoose.Schema({
-    user: { type: String, required: true },
+    user: { type: mongoose.Schema.Types.ObjectId, ref: 'User ', required: true },
     catway: { type: mongoose.Schema.Types.ObjectId, ref: 'Catway', required: true },
     clientName: { type: String, required: true },
     boatName: { type: String, required: true },

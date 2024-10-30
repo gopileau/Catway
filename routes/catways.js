@@ -27,6 +27,9 @@ router.get('/', async (req, res) => {
 // Route pour obtenir un catway par ID
 router.get('/:id', catwayController.getCatwayDetails);
 
+router.get('/protected-route', auth, (req, res) => {
+  res.json({ message: 'You have accessed a protected route!' });
+});
 // Route pour créer un catway
 router.post('/', createCatway);
 

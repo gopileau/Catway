@@ -3,6 +3,7 @@ const Catway = require('../models/Catway');
 const mongoose = require('mongoose');
 const winston = require('winston');
 
+// Logger configuration
 const logger = winston.createLogger({
   level: 'error',
   format: winston.format.json(),
@@ -12,13 +13,21 @@ const logger = winston.createLogger({
   ],
 });
 
+// Catway schema validation
 const catwaySchema = Joi.object({
   catwayNumber: Joi.string().required(),
   type: Joi.string().valid('long', 'short').required(),
   catwayState: Joi.string().required()
 });
 
-
+/**
+ * Get all catways.
+ * @function getCatways
+ * @async
+ * @param {Object} req - Express request object.
+ * @param {Object} res - Express response object.
+ * @returns {Promise<Array>} List of catways.
+ */
 exports.getCatways = async (req, res) => {
   try {
     const catways = await Catway.find().select('number type state');
@@ -32,6 +41,15 @@ exports.getCatways = async (req, res) => {
     throw error;
   }
 };
+
+/**
+ * Get details of a specific catway by ID.
+ * @function getCatwayDetails
+ * @async
+ * @param {Object} req - Express request object.
+ * @param {Object} res - Express response object.
+ * @returns {Promise<Object>} Details of the requested catway.
+ */
 exports.getCatwayDetails = async (req, res) => {
   console.log('ID du catway reçu :', req.params.id); 
   try {
@@ -53,12 +71,19 @@ exports.getCatwayDetails = async (req, res) => {
   }
 };
 
+/**
+ * Create a new catway.
+ * @function createCatway
+ * @async
+ * @param {Object} req - Express request object containing the catway data.
+ * @param {Object} res - Express response object.
+ * @returns {Promise<Object>} The created catway.
+ */
 exports.createCatway = async (req, res) => {
   const { error } = catwaySchema.validate(req.body);
   if (error) return res.status(400).json({ message: error.details[0].message });
 
   try {
-   
     const newCatway = new Catway({
       number: req.body.catwayNumber,
       type: req.body.type,
@@ -67,15 +92,29 @@ exports.createCatway = async (req, res) => {
 
     await newCatway.save();
     console.log(`Catway created with ID: ${newCatway._id}`);
-    res.status(201).json(newCatway);
+    
+    // Assurez-vous que l'ID est renvoyé dans la réponse
+    res.status(201).json({
+      message: 'Catway créé avec succès',
+      id: newCatway._id, // Vérifiez que cette ligne est présente
+      number: newCatway.number,
+      type: newCatway.type,
+      state: newCatway.state
+    });
   } catch (err) {
     console.error('Error while creating Catway:', err);
     res.status(500).json({ message: 'Erreur interne du serveur' });
   }
 };
 
-
-
+/**
+ * Update a specific catway by ID.
+ * @function updateCatway
+ * @async
+ * @param {Object} req - Express request object.
+ * @param {Object} res - Express response object.
+ * @returns {Promise<string>} Success message.
+ */
 exports.updateCatway = async (req, res) => {
   const id = req.params.id;
   const number = req.body.number;
@@ -90,7 +129,14 @@ exports.updateCatway = async (req, res) => {
   }
 };
 
-
+/**
+ * Delete a specific catway by ID.
+ * @function deleteCatway
+ * @async
+ * @param {Object} req - Express request object.
+ * @param {Object} res - Express response object.
+ * @returns {Promise<string>} Success message.
+ */
 exports.deleteCatway = async (req, res) => {
   const id = req.params.id;
 
@@ -102,6 +148,14 @@ exports.deleteCatway = async (req, res) => {
   }
 };
 
+/**
+ * Partially update a specific catway by ID.
+ * @function patchCatway
+ * @async
+ * @param {Object} req - Express request object.
+ * @param {Object} res - Express response object.
+ * @returns {Promise<Object>} The updated catway.
+ */
 exports.patchCatway = async (req, res) => {
   try {
     const id = req.params.id;
@@ -118,6 +172,7 @@ exports.patchCatway = async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 };
+
 
   
 
