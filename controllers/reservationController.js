@@ -21,28 +21,32 @@ const reservationSchema = Joi.object({
  * @returns {Object} La réservation créée.
  */
 exports.createReservation = async (req, res) => {
-    const { user, clientName, boatName, startTime, endTime, checkIn, checkOut } = req.body;
-    const { catwayId } = req.params;
-
-    const newReservation = new Reservation({
+    const { catway, user, clientName, boatName, startTime, endTime, checkIn, checkOut } = req.body;
+  
+    // Vérifiez si l'ID du catway est valide
+    if (!mongoose.Types.ObjectId.isValid(catway)) {
+      return res.status(400).json({ message: 'ID de catway invalide' });
+    }
+  
+    try {
+      const newReservation = new Reservation({
+        catway,
         user,
-        catway: catwayId,
         clientName,
         boatName,
-        startTime: new Date(startTime),
-        endTime: new Date(endTime),
-        checkIn: new Date(checkIn),
-        checkOut: new Date(checkOut)
-    });
-
-    try {
-        const savedReservation = await newReservation.save();
-        res.status(201).json(savedReservation);
+        startTime,
+        endTime,
+        checkIn,
+        checkOut
+      });
+  
+      await newReservation.save();
+      res.status(201).json({ message: 'Réservation créée avec succès', reservationId: newReservation._id });
     } catch (error) {
-        console.error('Erreur lors de la création de la réservation:', error);
-        res.status(500).json({ error: error.message });
+      console.error('Erreur lors de la création de la réservation:', error);
+      res.status(500).json({ message: 'Erreur lors de la création de la réservation' });
     }
-};
+  };
 
 /**
  * Met à jour une réservation existante.

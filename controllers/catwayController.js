@@ -92,14 +92,12 @@ exports.createCatway = async (req, res) => {
 
     await newCatway.save();
     console.log(`Catway created with ID: ${newCatway._id}`);
-    
-    // Assurez-vous que l'ID est renvoyé dans la réponse
+
+    // Réponse avec l'ID du catway créé
     res.status(201).json({
-      message: 'Catway créé avec succès',
-      id: newCatway._id, // Vérifiez que cette ligne est présente
-      number: newCatway.number,
-      type: newCatway.type,
-      state: newCatway.state
+      message: `Catway created successfully`,
+      id: newCatway._id.toString(), // Assurez-vous d'inclure l'ID ici sous forme de chaîne
+      catway: newCatway // Vous pouvez également renvoyer l'objet complet si nécessaire
     });
   } catch (err) {
     console.error('Error while creating Catway:', err);

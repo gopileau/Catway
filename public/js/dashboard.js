@@ -435,7 +435,7 @@ document.getElementById('createCatwayForm').addEventListener('submit', async (ev
   
       if (response.ok) {
           const data = await response.json(); // Récupérer la réponse JSON
-          alert(`Catway created successfully with ID: ${data.id}`); // Afficher l'ID dans une alerte
+          alert(`Catway created successfully with ID: ${data.id}`); // Utiliser data.id pour afficher l'ID
           fetchCatways(); // Appeler la fonction pour rafraîchir la liste des Catways
       } else {
           const errorData = await response.json();
@@ -478,11 +478,11 @@ document.addEventListener('DOMContentLoaded', () => {
   const form = document.getElementById('createReservationForm');
   if (form) {
       form.addEventListener('submit', async function(event) {
-          event.preventDefault(); 
+          event.preventDefault();
           const userId = document.getElementById('userSelect').value;
-          const catwayNumber = document.getElementById('catwayInput').value;
+          const catwayId = document.getElementById('catwayInput').value; // Renommez catwayNumber en catwayId
 
-          if (!catwayNumber) {
+          if (!catwayId) {
               alert('Veuillez entrer l\'ID du catway.');
               return;
           }
@@ -496,6 +496,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
           const reservationData = {
               user: userId,
+              catway: catwayId, // Ajoutez l'ID du catway ici
               clientName,
               boatName,
               startTime,
@@ -505,7 +506,7 @@ document.addEventListener('DOMContentLoaded', () => {
           };
 
           try {
-              const response = await fetch(`/api/catways/${catwayNumber}/reservations`, {
+              const response = await fetch(`/api/catways/${catwayId}/reservations`, {
                   method: 'POST',
                   headers: {
                       'Content-Type': 'application/json',
@@ -517,9 +518,9 @@ document.addEventListener('DOMContentLoaded', () => {
               const result = await response.json();
 
               if (response.ok) {
-                  alert(result.message); // Affiche le message de succès
+                  alert(`Réservation créée avec succès pour le catway ${catwayId}. ID de réservation : ${result.reservationId || 'inconnu'}`);
               } else {
-                  alert('Erreur: ' + result.error || 'Une erreur est survenue.');
+                  alert('Erreur: ' + (result.error || 'Une erreur est survenue.'));
               }
           } catch (error) {
               console.error('Erreur lors de la requête:', error);
@@ -530,6 +531,7 @@ document.addEventListener('DOMContentLoaded', () => {
       console.error("Le formulaire 'createReservationForm' n'a pas été trouvé.");
   }
 });
+
 // Supprimer Réservation
 document.getElementById('deleteReservationForm').addEventListener('submit', async (event) => {
   event.preventDefault(); 
@@ -572,19 +574,26 @@ updateCatwayForm.addEventListener('submit', async (e) => {
       method: 'PATCH',
       headers: {
         'Content-Type': 'application/json',
+        'Authorization': `Bearer ${localStorage.getItem('token')}`
       },
       body: JSON.stringify({ state: updateCatwayStatus }),
     });
 
     if (response.ok) {
-      console.log('Catway mis à jour avec succès');
+      const data = await response.text(); // Traiter la réponse comme texte
+      console.log('Réponse du serveur:', data); // Afficher la réponse texte
+      alert(data); // Afficher le message reçu
+      fetchCatways(); // Rafraîchir la liste des catways
     } else {
-      console.error('Erreur lors de la mise à jour du catway');
+      const errorData = await response.json();
+      alert(`Erreur lors de la mise à jour du catway: ${errorData.message || 'Une erreur est survenue'}`);
     }
   } catch (error) {
-    console.error(error);
+    console.error('Erreur réseau:', error);
+    alert('Erreur lors de la mise à jour du catway. Veuillez réessayer.');
   }
 });
+
 
 // Supprimer Catway
 const deleteCatwayForm = document.getElementById('deleteCatwayForm');
@@ -602,14 +611,22 @@ deleteCatwayForm.addEventListener('submit', async (e) => {
     });
 
     if (response.ok) {
-      console.log('Catway supprimé avec succès');
+      const data = await response.text(); // Lire la réponse en texte
+      console.log('Réponse du serveur:', data); // Afficher la réponse
+      alert(data); // Afficher l'alerte avec le message du serveur
+      fetchCatways(); // Rafraîchir la liste des catways après suppression
     } else {
-      console.error('Erreur lors de la suppression du catway');
+      const errorData = await response.text();
+      console.error(`Erreur lors de la suppression du catway : ${errorData}`);
+      alert(`Erreur lors de la suppression du catway : ${errorData}`);
     }
   } catch (error) {
-    console.error(error);
+    console.error('Erreur réseau:', error);
+    alert('Erreur réseau lors de la suppression du catway. Veuillez réessayer.');
   }
 });
+
+
 document.getElementById('viewCatwayForm').addEventListener('submit', async (event) => {
   event.preventDefault();
   const catwayId = document.getElementById('catwayNumberInput').value.trim();
